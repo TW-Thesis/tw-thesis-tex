@@ -12,9 +12,9 @@ TW-Thesis provides a [LaTeX](https://www.latex-project.org) template for master'
 
 Follow the steps below to go from nothing to your first PDF. It takes about ten minutes.
 
-### Install LaTeX and Python
+### Install LaTeX
 
-The template is compiled with XeLaTeX, and it uses Python 3 to turn `config.yml` into LaTeX macros (LaTeX cannot read YAML). Choose one way to install a LaTeX distribution for your system. `brew` and `winget` need to be installed first.
+The template is compiled with XeLaTeX. Choose one way to install a LaTeX distribution for your system. `brew` and `winget` need to be installed first.
 
 ```bash
 brew install --cask mactex-no-gui   # macOS
@@ -22,12 +22,13 @@ winget install --id MiKTeX.MiKTeX   # Windows
 sudo apt install texlive-full       # Debian / Ubuntu
 ```
 
-The lighter [TinyTeX](https://yihui.org/tinytex/) works too. After installing, check that it works and install the Python YAML package:
+The lighter [TinyTeX](https://yihui.org/tinytex/) works too. After installing, check that it works:
 
 ```bash
 xelatex --version
-python3 -m pip install pyyaml
 ```
+
+LaTeX cannot read YAML, so `config.yml` is first turned into LaTeX macros. `scripts/gen.lua` does that, and it runs on the `texlua` that comes with TeX, so **you do not need to install Python or anything else**.
 
 References are handled by the `citation-style-language` package and its `citeproc-lua`, so `.bib`, Hayagriva `.yml`, CSL JSON/YAML and any `.csl` style all work. A full TeX Live already includes it; with TinyTeX or a partial install, run `tlmgr install citation-style-language`.
 
@@ -64,7 +65,7 @@ Run all the commands below from the **project root**, which is the folder that c
 Once you have the project on your computer, try compiling it:
 
 ```bash
-python3 scripts/gen.py
+texlua scripts/gen.lua
 latexmk -xelatex main.tex
 ```
 
@@ -146,7 +147,7 @@ If you use VS Code, install the [LaTeX Workshop](https://marketplace.visualstudi
 If your school requires a watermark when you submit, first set the watermark image in the configuration file (this is explained in Chapter 2 of the tutorial), then compile with the following commands:
 
 ```bash
-python3 scripts/gen.py
+texlua scripts/gen.lua
 latexmk -g -xelatex -usepretex='\def\twwatermark{1}' main.tex
 ```
 
@@ -192,7 +193,7 @@ The official regulation PDFs are stored in [`docs/`](docs/). The beginning of ea
 | `contents/` | Thesis content (the tutorial chapters are the sample) |
 | `schools/` | Format presets for each school; `default.yml` is the only source of default values |
 | `i18n/` | Wording that depends on the language (Chinese and English) |
-| `scripts/` | The Python program that turns `config.yml` into LaTeX macros |
+| `scripts/` | The Lua script (run with `texlua`) that turns `config.yml` into LaTeX macros |
 | `tw-thesis.cls`, `tw-thesis.sty` | The template itself: the document class plus tools for figures, tables and code |
 | `Makefile`, `justfile`, `latexmkrc` | Build commands; `latexmkrc` sets up XeLaTeX, `citeproc-lua` and the output format |
 | `fonts/`, `assets/`, `docs/` | Fonts, watermarks and each school's regulation PDFs |

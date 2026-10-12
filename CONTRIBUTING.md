@@ -22,7 +22,7 @@
 6. 用該校設定編譯，逐頁對照規範，確認 0 個錯誤：
 
    ```bash
-   python3 scripts/gen.py && latexmk -xelatex main.tex
+   texlua scripts/gen.lua && latexmk -xelatex main.tex
    ```
 
 要讓自動提醒涵蓋新學校，還需要到 [tw-thesis-updater](https://github.com/TW-Thesis/tw-thesis-updater) 的 `sources.json` 加上規範網址，這是另一個 repo。
@@ -31,7 +31,7 @@
 
 - 這個 repo 與 [tw-thesis-typ](https://github.com/TW-Thesis/tw-thesis-typ) 共用 `schools/`、`i18n/` 與 `config.yml` 的格式；改動這些檔案的鍵值時，請一併確認另一個版本是否要跟著改。
 - 設定的預設值只放在 `schools/default.yml`；新增設定項目時，也要在那裡加上註解說明單位。
-- 拼錯的 key 會直接報錯（`scripts/gen.py` 印出 `unknown key`），這是刻意的，請維持。
+- 拼錯的 key 會直接報錯（`scripts/gen.lua` 印出 `unknown key`），這是刻意的，請維持。
 - 修改後先在幾所不同學校的設定下編譯，確認沒有讓其他學校跑版。
 - 改動排版行為時，請在 PR 說明依據的是哪一條規範。
 
@@ -46,7 +46,7 @@
 
 1. Fork 後建立新分支，一個 PR 只做一件事。
 2. commit 訊息用一句話說明「為什麼改」。
-3. 確認 `python3 scripts/gen.py && latexmk -xelatex main.tex` 沒有錯誤。
+3. 確認 `texlua scripts/gen.lua && latexmk -xelatex main.tex` 沒有錯誤。
 4. 填寫 PR 範本裡的檢查項目。
 
 ## 授權

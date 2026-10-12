@@ -2,7 +2,7 @@
 %
 % Page layout, front matter, headings and references live here. Nothing here
 % knows which thesis it is typesetting: every number and string comes from
-% .tw-thesis-config.tex, which scripts/gen.py writes from config.yml and
+% .tw-thesis-config.tex, which scripts/gen.lua writes from config.yml and
 % schools/*.yml. The companion package tw-thesis.sty, loaded at the end of this
 % class, holds the helpers used in the chapters (figures, tables, code).
 % Build with XeLaTeX from the project root (see Makefile).
@@ -23,7 +23,7 @@
 \ifdefined\twgenerated\else\def\twgenerated{.tw-thesis-config.tex}\fi
 \IfFileExists{\twgenerated}{\input{\twgenerated}}{%
   \ClassError{tw-thesis}{\twgenerated\space is missing}{%
-    Run `python3 scripts/gen.py` (or `make`) in the project root first.}}
+    Run `texlua scripts/gen.lua` (or `make`) in the project root first.}}
 
 \newif\iftw@zh
 \def\tw@lang{chinese}
@@ -467,7 +467,7 @@
 
 % --------------------------------------------------------------------------
 % bibliography: citation-style-language reads .bib, CSL JSON/YAML (and the CSL
-% JSON scripts/gen.py converts Hayagriva to); citeproc-lua formats it with any
+% JSON scripts/gen.lua converts Hayagriva to); citeproc-lua formats it with any
 % CSL style. d.bibliography.style.id is a built-in name or a path to a .csl.
 % --------------------------------------------------------------------------
 \edef\tw@cslstyle{\twget{d.bibliography.style.id}}

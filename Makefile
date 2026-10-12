@@ -1,8 +1,9 @@
-# python3 scripts/gen.py turns config.yml into .tw-thesis-config.tex (and
+# texlua scripts/gen.lua turns config.yml into .tw-thesis-config.tex (and
 # converts Hayagriva bibliographies to CSL JSON), then latexmk runs XeLaTeX and
 # citeproc-lua (see latexmkrc) as many times as the build needs.
 LATEXMK   ?= latexmk
-PYTHON    ?= python3
+# texlua comes with every TeX distribution, so no Python is needed
+TEXLUA    ?= texlua
 MAIN      := main
 OUTPUT    := $(MAIN).pdf
 FLAGS     := -xelatex -interaction=nonstopmode -halt-on-error
@@ -11,7 +12,7 @@ FLAGS     := -xelatex -interaction=nonstopmode -halt-on-error
 RELEASE   := -usepretex='\def\twwatermark{1}'
 
 # private build files: never edit or commit these
-PRIVATE   := .tw-thesis-config.tex .tw-thesis-bibliography.json .tw-thesis-build
+PRIVATE   := .tw-thesis-config.tex .tw-thesis-build
 
 .PHONY: generate compile release watch watch-release generate-en compile-en watch-en clean
 
@@ -22,7 +23,7 @@ PRIVATE   := .tw-thesis-config.tex .tw-thesis-bibliography.json .tw-thesis-build
 # config.yml, the school preset and the bibliography are converted before every
 # build; the script leaves unchanged outputs alone, so this stays cheap
 generate:
-	$(PYTHON) scripts/gen.py
+	$(TEXLUA) scripts/gen.lua
 
 # draft, no watermark: the default target. latexmkrc prints nothing on success
 # and Typst-style errors on failure
@@ -43,7 +44,7 @@ watch-release: generate
 
 # the English tutorial, with English prefixes (Figure, Table, Chapter, Section)
 generate-en: generate
-	$(PYTHON) scripts/gen.py contents/i18n/en/config.yml -o .tw-thesis-build/config-en.tex
+	$(TEXLUA) scripts/gen.lua contents/i18n/en/config.yml -o .tw-thesis-build/config-en.tex
 
 compile-en: generate-en
 	$(LATEXMK) $(FLAGS) $(MAIN)-en.tex

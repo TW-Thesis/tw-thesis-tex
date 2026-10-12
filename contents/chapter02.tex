@@ -2,7 +2,7 @@
 
 完成第一章的設定後，請先編譯一次，對照系所要求檢查字級、行距與頁面邊界，再調整需要修改的項目。本章會依序說明這些設定的位置與用法，建議一次修改一項，確認排版結果後再繼續。
 
-下面的 \code{YAML} 範例都可以直接寫進 \code{config.yml} 覆蓋。若檔案裡已經有 \code{layout:}，請將新增的設定放在原有區塊下，保留範例中的縮排，不要再建立第二個同名區塊。每次修改設定後，都要重新執行 \code{python3 scripts/gen.py}（或直接用 \code{make}），\LaTeX{} 才讀得到新的值。
+下面的 \code{YAML} 範例都可以直接寫進 \code{config.yml} 覆蓋。若檔案裡已經有 \code{layout:}，請將新增的設定放在原有區塊下，保留範例中的縮排，不要再建立第二個同名區塊。每次修改設定後，都要重新執行 \code{texlua scripts/gen.lua}（或直接用 \code{make}），\LaTeX{} 才讀得到新的值。
 
 \section{字體與字級}
 
@@ -189,6 +189,6 @@ watermark:
 沒有安裝 \code{make} 時，也可以在專案根目錄執行以下指令，輸出的檔案同樣是 \code{main.pdf}：
 
 \begin{lstlisting}[language=bash]
-python3 scripts/gen.py
+texlua scripts/gen.lua
 latexmk -g -xelatex -usepretex='\def\twwatermark{1}' main.tex
 \end{lstlisting}

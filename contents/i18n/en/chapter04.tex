@@ -70,7 +70,7 @@ bibliography:
   full: false        # true also lists entries that were not cited
 \end{lstlisting}
 
-\code{path} may mix \code{.bib}, Hayagriva \code{.yml} (the format of the Typst version) and CSL JSON/YAML; Hayagriva files are converted to CSL JSON automatically when \code{scripts/gen.py} runs, so you need not convert them yourself. A citation key cannot appear in two different files.
+\code{path} may mix \code{.bib}, Hayagriva \code{.yml} (the format of the Typst version) and CSL JSON/YAML; Hayagriva files are converted to CSL JSON automatically when \code{scripts/gen.lua} runs, so you need not convert them yourself. A citation key cannot appear in two different files.
 
 \code{style} decides the logic of the references and falls roughly into three systems: author-date shows the author's name and year in the text, so readers see at a glance how old the study is; author-page shows the author and page, which makes it easy to check the source; and numeric keeps only a number or superscript in the text and orders the list by number, the least distracting to read. Those in common use in each field are:
 

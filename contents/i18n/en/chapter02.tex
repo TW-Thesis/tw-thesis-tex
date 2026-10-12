@@ -2,7 +2,7 @@
 
 After the setup in Chapter 1, compile once, check the font size, line spacing and page margins against your department's requirements, and then change whatever needs changing. This chapter explains where each of these settings lives and how to use it; change one item at a time and check the result before moving on.
 
-The \code{YAML} examples below can all be written straight into \code{config.yml} to override the defaults. If the file already has \code{layout:}, put the new settings under the existing block, keep the indentation shown in the example, and do not create a second block with the same name. After every change, run \code{python3 scripts/gen.py} again (or just use \code{make}) so that \LaTeX{} sees the new values.
+The \code{YAML} examples below can all be written straight into \code{config.yml} to override the defaults. If the file already has \code{layout:}, put the new settings under the existing block, keep the indentation shown in the example, and do not create a second block with the same name. After every change, run \code{texlua scripts/gen.lua} again (or just use \code{make}) so that \LaTeX{} sees the new values.
 
 \section{Fonts and Sizes}
 
@@ -189,6 +189,6 @@ To use your own watermark, first put the image in \code{assets/watermarks/} and 
 Without \code{make}, you can also run the commands below in the project root; the output file is again \code{main.pdf}:
 
 \begin{lstlisting}[language=bash]
-python3 scripts/gen.py
+texlua scripts/gen.lua
 latexmk -g -xelatex -usepretex='\def\twwatermark{1}' main.tex
 \end{lstlisting}

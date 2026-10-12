@@ -70,7 +70,7 @@ bibliography:
   full: false        # true 會把沒引用到的條目也列出來
 \end{lstlisting}
 
-\code{path} 可以混用 \code{.bib}、Hayagriva \code{.yml}（Typst 版使用的格式）與 CSL JSON／YAML；Hayagriva 檔會在 \code{scripts/gen.py} 執行時自動轉成 CSL JSON，不必自己轉換。不同檔案裡的識別名稱不能重複。
+\code{path} 可以混用 \code{.bib}、Hayagriva \code{.yml}（Typst 版使用的格式）與 CSL JSON／YAML；Hayagriva 檔會在 \code{scripts/gen.lua} 執行時自動轉成 CSL JSON，不必自己轉換。不同檔案裡的識別名稱不能重複。
 
 \code{style} 決定文獻的排版邏輯，大致分成三個系統：作者-年份制在正文顯示作者姓名與年份，讀者能一眼看出研究新舊；作者-頁碼制在正文顯示作者與頁碼，方便對照原文出處；數字制則在正文只留數字或上標，清單依編號排列，讀起來最不受干擾。模板以 \code{citation-style-language} 與 \code{citeproc-lua} 處理 CSL 樣式，隨 \TeX{} 發行版安裝的樣式涵蓋各領域慣用的幾種，如下：
 

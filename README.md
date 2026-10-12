@@ -12,9 +12,9 @@ TW-Thesis 提供臺灣主要大學碩博士論文的 [LaTeX](https://www.latex-p
 
 將本專案 clone 下來後，建議按照以下步驟從零開始到編譯出第一份 PDF，耗時約十分鐘。
 
-### 安裝 LaTeX 與 Python
+### 安裝 LaTeX
 
-這份模板使用 XeLaTeX 編譯，並用 Python 3 把 `config.yml` 轉成 LaTeX 巨集（LaTeX 讀不了 YAML）。依系統選一種方式安裝 LaTeX 發行版（`brew`、`winget` 需要先有對應的套件管理工具）：
+這份模板使用 XeLaTeX 編譯。依系統選一種方式安裝 LaTeX 發行版（`brew`、`winget` 需要先有對應的套件管理工具）：
 
 ```bash
 brew install --cask mactex-no-gui   # macOS
@@ -22,12 +22,13 @@ winget install --id MiKTeX.MiKTeX   # Windows
 sudo apt install texlive-full       # Debian / Ubuntu
 ```
 
-也可以改用較輕量的 [TinyTeX](https://yihui.org/tinytex/)。裝好後確認能執行，並安裝 Python 的 YAML 套件：
+也可以改用較輕量的 [TinyTeX](https://yihui.org/tinytex/)。裝好後確認能執行：
 
 ```bash
 xelatex --version
-python3 -m pip install pyyaml
 ```
+
+LaTeX 讀不了 YAML，所以 `config.yml` 要先轉成 LaTeX 巨集。這由專案裡的 `scripts/gen.lua` 負責，它用 TeX 自帶的 `texlua` 執行，**不需要另外安裝 Python 或其他工具**。
 
 參考文獻由 `citation-style-language` 套件與它的 `citeproc-lua` 處理，所以 `.bib`、Hayagriva `.yml`、CSL JSON／YAML 與任何 `.csl` 樣式都能使用。完整的 TeX Live 已經內含；TinyTeX 或只裝部分套件時，執行 `tlmgr install citation-style-language`。
 
@@ -64,7 +65,7 @@ cd my-thesis
 建立專案並 clone 後，可以嘗試編譯：
 
 ```bash
-python3 scripts/gen.py
+texlua scripts/gen.lua
 latexmk -xelatex main.tex
 ```
 
@@ -146,7 +147,7 @@ make watch
 交稿如果需要浮水印，要先在設定檔指定浮水印圖片（第二章有寫），再用下面的指令編譯：
 
 ```bash
-python3 scripts/gen.py
+texlua scripts/gen.lua
 latexmk -g -xelatex -usepretex='\def\twwatermark{1}' main.tex
 ```
 
@@ -192,7 +193,7 @@ make clean     # 刪掉 main.pdf 與暫存檔
 | `contents/` | 論文內容（教學章節即範例） |
 | `schools/` | 各校格式；`default.yml` 是唯一的預設值來源 |
 | `i18n/` | 其他語言範例檔 |
-| `scripts/` | 把 `config.yml` 轉成 LaTeX 巨集的 Python 程式 |
+| `scripts/` | 把 `config.yml` 轉成 LaTeX 巨集的 Lua 程式（用 `texlua` 執行） |
 | `tw-thesis.cls`、`tw-thesis.sty` | 模板本體：文件類別，以及圖片、表格、程式碼等工具 |
 | `Makefile`、`justfile`、`latexmkrc` | 編譯指令；`latexmkrc` 設定 XeLaTeX、`citeproc-lua` 與輸出格式 |
 | `fonts/`、`assets/`、`docs/` | 字型、浮水印、各校規範 PDF |

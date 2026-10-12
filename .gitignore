@@ -19,7 +19,6 @@ main-en.pdf
 
 # generated from config.yml
 .tw-thesis-config.tex
-.tw-thesis-bibliography.json
 .tw-thesis-build/
 
 .DS_Store
@@ -32,7 +31,6 @@ __pycache__/
 fonts/english/Times New Roman*.ttf
 
 # local only: never pushed
-scripts/
 tests/
 .vscode/
 docs/superpowers/

@@ -2,7 +2,8 @@
 set quiet := true
 
 latexmk := "latexmk"
-python := "python3"
+# texlua comes with every TeX distribution, so no Python is needed
+texlua := "texlua"
 main := "main"
 flags := "-xelatex -interaction=nonstopmode -halt-on-error"
 
@@ -10,9 +11,9 @@ flags := "-xelatex -interaction=nonstopmode -halt-on-error"
 default: compile
 
 # config.yml, the school preset and the bibliography are converted before every
-# build (see scripts/gen.py); latexmkrc then runs XeLaTeX and citeproc-lua
+# build (see scripts/gen.lua); latexmkrc then runs XeLaTeX and citeproc-lua
 generate:
-    {{ python }} scripts/gen.py
+    {{ texlua }} scripts/gen.lua
 
 # draft, no watermark; latexmkrc prints nothing on success and Typst-style errors on failure
 [no-exit-message]
@@ -35,7 +36,7 @@ watch-release: generate
 
 # the English tutorial, with English prefixes (Figure, Table, Chapter, Section)
 generate-en: generate
-    {{ python }} scripts/gen.py contents/i18n/en/config.yml -o .tw-thesis-build/config-en.tex
+    {{ texlua }} scripts/gen.lua contents/i18n/en/config.yml -o .tw-thesis-build/config-en.tex
 
 [no-exit-message]
 compile-en: generate-en
@@ -47,4 +48,4 @@ watch-en: generate-en
 
 clean:
     {{ latexmk }} -C {{ main }}.tex
-    rm -rf .tw-thesis-config.tex .tw-thesis-bibliography.json .tw-thesis-build {{ main }}.bbl {{ main }}.xdv {{ main }}-en.pdf .release
+    rm -rf .tw-thesis-config.tex .tw-thesis-build {{ main }}.bbl {{ main }}.xdv {{ main }}-en.pdf .release

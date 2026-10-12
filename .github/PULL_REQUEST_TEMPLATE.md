@@ -8,7 +8,7 @@
 
 ## 檢查清單
 
-- [ ] `python3 scripts/gen.py && latexmk -xelatex main.tex` 沒有錯誤
+- [ ] `texlua scripts/gen.lua && latexmk -xelatex main.tex` 沒有錯誤
 - [ ] 在至少兩所不同學校的設定下編譯過，沒有讓其他學校跑版
 - [ ] 新增設定項目時，已在 `schools/default.yml` 補上註解與單位
 - [ ] 改了教學文件的話，中英文版都已同步（或說明為何不同步）

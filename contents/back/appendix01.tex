@@ -15,11 +15,11 @@ xelatex --version
 確認能夠顯示版本資訊後，再嘗試編譯。若找不到的是 \code{make}，則可以先使用以下指令，直接產生 PDF：
 
 \begin{lstlisting}[language=bash]
-python3 scripts/gen.py
+texlua scripts/gen.lua
 latexmk -xelatex main.tex
 \end{lstlisting}
 
-若錯誤訊息指出找不到 \code{main.tex} 或 \code{.tw-thesis-config.tex}，請檢查終端機目前所在的資料夾。編譯指令應在專案根目錄執行，也就是能看到 \code{main.tex}、\code{config.yml} 與 \code{contents/} 的位置；\code{.tw-thesis-config.tex} 則是 \code{scripts/gen.py} 產生的，先執行過一次就會出現。若目前位於章節資料夾，請先切換回根目錄再試一次。
+若錯誤訊息指出找不到 \code{main.tex} 或 \code{.tw-thesis-config.tex}，請檢查終端機目前所在的資料夾。編譯指令應在專案根目錄執行，也就是能看到 \code{main.tex}、\code{config.yml} 與 \code{contents/} 的位置；\code{.tw-thesis-config.tex} 則是 \code{scripts/gen.lua} 產生的，先執行過一次就會出現。若目前位於章節資料夾，請先切換回根目錄再試一次。
 
 \section{修改設定後無法編譯}
 

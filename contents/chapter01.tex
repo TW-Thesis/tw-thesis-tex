@@ -6,7 +6,7 @@
 
 \section{安裝與編譯}
 
-在正式開始編譯與撰寫之前，需先安裝 \LaTeX{} 發行版，以及模板用來轉換設定檔的 Python 3。這份模板使用 \XeLaTeX{} 編譯，發行版請選擇 \href{https://www.tug.org/texlive/}{TeX Live}（macOS 可用 MacTeX，Windows 可用 TeX Live 安裝程式），或較輕量的 \href{https://yihui.org/tinytex/}{TinyTeX}。下面是不同的安裝方式，依自己的環境選一行執行即可；使用 \code{brew} 或 \code{winget} 前，電腦上須先有對應的套件管理工具。
+在正式開始編譯與撰寫之前，需先安裝 \LaTeX{} 發行版。這份模板使用 \XeLaTeX{} 編譯，發行版請選擇 \href{https://www.tug.org/texlive/}{TeX Live}（macOS 可用 MacTeX，Windows 可用 TeX Live 安裝程式），或較輕量的 \href{https://yihui.org/tinytex/}{TinyTeX}。下面是不同的安裝方式，依自己的環境選一行執行即可；使用 \code{brew} 或 \code{winget} 前，電腦上須先有對應的套件管理工具。
 
 \begin{lstlisting}[language=bash]
 brew install --cask mactex-no-gui   # macOS
@@ -14,16 +14,16 @@ winget install --id MiKTeX.MiKTeX   # Windows
 sudo apt install texlive-full       # Debian / Ubuntu
 \end{lstlisting}
 
-Python 3 的部分，macOS 與大多數 Linux 已內建，Windows 可到 \href{https://www.python.org/downloads/}{python.org} 下載。另外還需要 \code{PyYAML} 套件：
+模板用來轉換設定檔的小程式 \code{scripts/gen.lua}，是由 \TeX{} 附帶的 \code{texlua} 執行，不需要另外安裝 Python 或其他工具。參考文獻使用 \code{citation-style-language} 套件，完整的 \TeX{} Live 已經內含；若用 TinyTeX 或只裝了部分套件，請另外補上：
 
 \begin{lstlisting}[language=bash]
-python3 -m pip install pyyaml
+tlmgr install citation-style-language
 \end{lstlisting}
 
 安裝後，在終端機切換到專案根目錄，也就是放有 \code{main.tex} 的資料夾，執行下列指令：
 
 \begin{lstlisting}[language=bash]
-python3 scripts/gen.py
+texlua scripts/gen.lua
 latexmk -xelatex main.tex
 \end{lstlisting}
 
@@ -59,7 +59,7 @@ make clean      # 刪掉 main.pdf 與編譯過程的暫存檔
 \code{main.tex} & 裝訂順序：前置、各章、參考文獻、附錄 \\
 \code{contents/} & 論文內容。\code{front/} 是摘要與致謝，\code{back/} 是附錄與 \code{.bib} \\
 \code{schools/} & 各校格式設定。\code{default.yml} 是唯一的預設值來源 \\
-\code{scripts/} & 把 \code{config.yml} 轉成 \LaTeX{} 巨集的 Python 程式 \\
+\code{scripts/} & 把 \code{config.yml} 轉成 \LaTeX{} 巨集的 Lua 程式，用 \code{texlua} 執行 \\
 \code{tw-thesis.cls}、\code{tw-thesis.sty} & 模板本體：文件類別，以及圖片、三線表、程式碼樣式等工具；跟哪一本論文無關，一般不用改 \\
 \code{figures/} & 論文圖片與範例圖片 \\
 \code{assets/} & 學校浮水印等模板素材 \\
@@ -99,7 +99,7 @@ keywords-en: ["Distributed Systems", "Consistency"]
 
 日期格式預設用 \code{YYYY-MM-DD}。封面會自動換成民國年與英文月份，審定書也會自動套上口試日期。
 
-\code{degree}（碩士／博士）和 \code{type}（論文／技術報告）會用在封面和審定書。修改時，也要檢查對應的 \code{degree-en} 和 \code{type-en}。存檔後重新執行 \code{python3 scripts/gen.py} 與編譯，先看封面上的中英文資料是否一致，再檢查審定書的日期。
+\code{degree}（碩士／博士）和 \code{type}（論文／技術報告）會用在封面和審定書。修改時，也要檢查對應的 \code{degree-en} 和 \code{type-en}。存檔後重新執行 \code{texlua scripts/gen.lua} 與編譯，先看封面上的中英文資料是否一致，再檢查審定書的日期。
 
 \section{套用學校格式}
 
@@ -140,7 +140,7 @@ layout:
     top: 3.5
 \end{lstlisting}
 
-如果執行 \code{scripts/gen.py} 時出現 \code{unknown key}，先檢查錯誤訊息指出的欄位。例如下面的 \code{fnot-size} 拼錯了，應改成 \code{font-size}：
+如果執行 \code{scripts/gen.lua} 時出現 \code{unknown key}，先檢查錯誤訊息指出的欄位。例如下面的 \code{fnot-size} 拼錯了，應改成 \code{font-size}：
 
 \begin{lstlisting}
 error: config.yml: unknown key `layout.fnot-size` (see schools/default.yml)

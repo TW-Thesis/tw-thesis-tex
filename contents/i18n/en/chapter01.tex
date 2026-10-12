@@ -6,7 +6,7 @@ The source files of this tutorial all live in \code{contents/}, and each chapter
 
 \section{Installing and Compiling}
 
-Before compiling and writing, install a \LaTeX{} distribution and the Python 3 that the template uses to convert the config file. The template is compiled with \XeLaTeX{}; pick \href{https://www.tug.org/texlive/}{TeX Live} (MacTeX on macOS, the TeX Live installer on Windows) or the lighter \href{https://yihui.org/tinytex/}{TinyTeX}. The lines below are different ways to install one; run whichever fits your system. \code{brew} and \code{winget} must already be installed.
+Before compiling and writing, install a \LaTeX{} distribution. The template is compiled with \XeLaTeX{}; pick \href{https://www.tug.org/texlive/}{TeX Live} (MacTeX on macOS, the TeX Live installer on Windows) or the lighter \href{https://yihui.org/tinytex/}{TinyTeX}. The lines below are different ways to install one; run whichever fits your system. \code{brew} and \code{winget} must already be installed.
 
 \begin{lstlisting}[language=bash]
 brew install --cask mactex-no-gui   # macOS
@@ -14,16 +14,16 @@ winget install --id MiKTeX.MiKTeX   # Windows
 sudo apt install texlive-full       # Debian / Ubuntu
 \end{lstlisting}
 
-As for Python 3, macOS and most Linux systems ship with it, and on Windows you can download it from \href{https://www.python.org/downloads/}{python.org}. You also need the \code{PyYAML} package:
+The small program that converts the config file, \code{scripts/gen.lua}, is run by the \code{texlua} that comes with \TeX{}, so you do not need to install Python or anything else. References use the \code{citation-style-language} package; a full \TeX{} Live already includes it, and with TinyTeX or a partial install you add it yourself:
 
 \begin{lstlisting}[language=bash]
-python3 -m pip install pyyaml
+tlmgr install citation-style-language
 \end{lstlisting}
 
 Once installed, switch to the project root in a terminal, which is the folder that contains \code{main.tex}, and run:
 
 \begin{lstlisting}[language=bash]
-python3 scripts/gen.py
+texlua scripts/gen.lua
 latexmk -xelatex main.tex
 \end{lstlisting}
 
@@ -59,7 +59,7 @@ Path & Purpose \\
 \code{main.tex} & Binding order: front matter, chapters, references, appendices \\
 \code{contents/} & The thesis text. \code{front/} holds the abstract and acknowledgements, \code{back/} the appendices and the \code{.bib} file \\
 \code{schools/} & Format settings per school. \code{default.yml} is the only source of defaults \\
-\code{scripts/} & The Python program that turns \code{config.yml} into \LaTeX{} macros \\
+\code{scripts/} & The Lua script, run with \code{texlua}, that turns \code{config.yml} into \LaTeX{} macros \\
 \code{tw-thesis.cls}, \code{tw-thesis.sty} & The template itself: the document class plus tools for figures, three-line tables and code style; independent of any one thesis and normally left alone \\
 \code{figures/} & Thesis figures and sample figures \\
 \code{assets/} & Template material such as school watermarks \\
@@ -99,7 +99,7 @@ keywords-en: ["Distributed Systems", "Consistency"]
 
 Dates use \code{YYYY-MM-DD}. The cover converts them to the ROC year and an English month automatically, and the verification letter picks up the defense date as well.
 
-\code{degree} (Master/Doctor) and \code{type} (thesis/technical report) are used on the cover and the verification letter. When you change them, check the matching \code{degree-en} and \code{type-en} too. After saving, run \code{python3 scripts/gen.py} and compile again, look at the cover to see that the Chinese and English details agree, then check the date on the verification letter.
+\code{degree} (Master/Doctor) and \code{type} (thesis/technical report) are used on the cover and the verification letter. When you change them, check the matching \code{degree-en} and \code{type-en} too. After saving, run \code{texlua scripts/gen.lua} and compile again, look at the cover to see that the Chinese and English details agree, then check the date on the verification letter.
 
 \section{Applying a School's Format}
 
@@ -140,7 +140,7 @@ layout:
     top: 3.5
 \end{lstlisting}
 
-If \code{scripts/gen.py} reports \code{unknown key}, check the field named in the message. In the example below \code{fnot-size} is misspelled and should be \code{font-size}:
+If \code{scripts/gen.lua} reports \code{unknown key}, check the field named in the message. In the example below \code{fnot-size} is misspelled and should be \code{font-size}:
 
 \begin{lstlisting}
 error: config.yml: unknown key `layout.fnot-size` (see schools/default.yml)
