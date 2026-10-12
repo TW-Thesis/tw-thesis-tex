@@ -1,0 +1,25 @@
+# 國立高雄師範大學 National Kaohsiung Normal University
+#
+# Source: docs/國立高雄師範大學-1100824-碩博士論文規範.pdf (研究生論文規格規範)
+#   https://c.nknu.edu.tw/aca/FilesDownload.aspx?PN=113&PClass=A2004&GI=2
+# Only what differs from schools/default.yml, which documents every key.
+#
+# The regulation covers the cover, spine and binding order only, and calls them
+# advisory (請參酌); fonts, sizes and body margins are left to departments.
+#
+# Not expressible yet: cover margins (top/bottom 3cm, left 3.5cm, right 3cm)
+# with the title block 5cm down; list of tables comes before list of figures;
+# spine.
+
+university: "國立高雄師範大學"
+university-en: "National Kaohsiung Normal University"
+
+sections:
+  acknowledgement: "謝詞"
+
+titles:
+  toc: "目~錄"
+
+watermark: # official: sso.nknu.edu.tw/Thesis/v2011/example/watermark.gif (raster, 269px)
+  image: "/assets/watermarks/nknu.png"
+  width: 50 # %

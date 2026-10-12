@@ -1,0 +1,19 @@
+% The English tutorial as a document of its own, with English prefixes (Figure,
+% Table, Chapter, Section). Build it with `make compile-en`, which first writes
+% .tw-thesis-build/config-en.tex from contents/i18n/en/config.yml. Your thesis is
+% built from main.tex; this file is not part of it.
+\def\twgenerated{.tw-thesis-build/config-en.tex}
+\documentclass{tw-thesis}
+
+\begin{document}
+
+\thesisfront
+
+\input{contents/i18n/en/chapter01}
+\input{contents/i18n/en/chapter02}
+\input{contents/i18n/en/chapter03}
+\input{contents/i18n/en/chapter04}
+
+\references
+
+\end{document}

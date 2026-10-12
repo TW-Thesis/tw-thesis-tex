@@ -1,0 +1,21 @@
+# 國立臺灣師範大學 National Taiwan Normal University
+#
+# Source: docs/國立臺灣師範大學-1140305-碩博士論文規範.pdf
+#   https://www.aa.ntnu.edu.tw/zh_tw/Forms/graduate01/Graduation01
+# Only what differs from schools/default.yml, which documents every key.
+#
+# The university fixes the cover, binding order and page numbering;
+# departments set fonts, spacing and margins.
+#
+# Not expressible yet: continuing-education program line on the cover;
+# list of tables comes before list of figures.
+
+university: "國立臺灣師範大學"
+university-en: "National Taiwan Normal University"
+
+cover:
+  size: # pt
+    title: 18
+    title-en: 18
+
+# No watermark file: the library adds the watermark itself after review.

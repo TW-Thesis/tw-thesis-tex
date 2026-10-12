@@ -1,0 +1,25 @@
+# 國立政治大學 National Chengchi University
+#
+# Source: docs/國立政治大學-1131223-碩博士論文規範.pdf
+#   https://chinese.nccu.edu.tw/upload/35/download_file/5212/
+# Only what differs from schools/default.yml, which documents every key.
+#
+# The regulation sets the cover and heading sizes, 12pt 標楷體 / Times New
+# Roman and 1.5 line height -- all already the defaults. It does not set body
+# margins; the ones below are Word's zh-TW "標準" preset.
+#
+# Not expressible yet: cover lists the advisor before the student; cover
+# top/bottom margins 2.54cm; spine.
+
+university: "國立政治大學"
+university-en: "National Chengchi University"
+
+layout:
+  margin: # cm, Word (zh-TW) "標準" preset
+    top: 2.54
+    bottom: 2.54
+    left: 3.18
+    right: 3.18
+
+watermark: # shipped with this template (vector)
+  image: "/assets/watermarks/nccu.pdf"

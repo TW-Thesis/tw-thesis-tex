@@ -1,0 +1,209 @@
+\chapter{文獻、程式碼與附錄}\label{cha:refs}
+
+本章接續說明文獻引用、程式碼與附錄的寫法。各節範例互不依賴，需要哪個就照抄哪段，再換成自己論文的資料即可。
+
+文獻與附錄的檔案放在 \code{contents/back/}，其餘範例可以直接寫進本章。搬動或修改內容時，記得同步更新 \code{main.tex} 裡對應的引用位置，以免參考文獻或附錄的順序跑掉。
+
+\section{引用文獻}
+
+\code{.bib} 是以 \BibTeX{} 格式儲存的純文字文獻資料庫，一筆文獻對應一個條目，格式是 \code{@類型{識別名稱, 欄位 = {值}, ...}}。\code{contents/back/references.bib} 已經收錄幾筆範例，其中一筆長這樣：
+
+\begin{lstlisting}
+@inproceedings{kocher99,
+  author =       {C. Kocher and J. Jaffe and B. Jun},
+  title =        {Differential Power Analysis},
+  editor =       {M. Wiener},
+  booktitle =    {Advances in Cryptology ({CRYPTO}~'99)},
+  series =       {Lecture Notes in Computer Science},
+  volume =       1666,
+  pages =        {388-397},
+  publisher =    {Springer-Verlag},
+  month =        {August},
+  year =         1999
+}
+\end{lstlisting}
+
+\code{@inproceedings} 是文獻類型（研討會論文），常見的還有 \code{@article}（期刊論文）、\code{@book}（書籍）、\code{@incollection}（專書篇章）等，類型會影響參考文獻頁該顯示哪些欄位。\code{kocher99} 是識別名稱，用來在內文引用這筆文獻，同一份 \code{.bib} 裡不能重複；後面的 \code{author}、\code{title}、\code{year} 等則是這筆文獻的資料，逐欄填入即可，順序不影響排版結果。
+
+Google Scholar 每筆搜尋結果下方的「引用」按鈕，彈出視窗最下面就有 \BibTeX{} 連結，點開即可複製整個條目；圖書館資料庫（如 IEEE Xplore、ACM Digital Library）的文獻頁面也大多有「Export Citation」或「Cite」功能，選 \BibTeX{} 格式匯出。若平常使用 Zotero、EndNote 等文獻管理軟體，同樣可以直接匯出 \code{.bib} 檔。拿到條目後貼進 \code{references.bib}，把識別名稱改成自己好記的名字（例如 \code{作者姓+年份}），再確認沒有跟既有條目重複即可。
+
+文獻資料準備好後，回到章節檔案，使用相同的識別名稱引用。若要把文獻放在句尾，可以使用 \code{\citep}；若要把作者寫進句子，則使用 \code{\citet}。以下也列出只顯示作者或年份的寫法，可以依句子需要選用。這四個指令來自 \code{citation-style-language} 套件，模板已經載入。
+
+\begin{lstlisting}[language=latex]
+\citep{kocher99}       % 括號引用
+\citet{kocher99}       % 行文引用
+\citeauthor{kocher99}  % 只要作者
+\citeyear{kocher99}    % 只要年份
+\end{lstlisting}
+
+四個指令編譯後的差異如下，請先對照確認，再將識別名稱換成自己要引用的文獻：
+
+\begin{tlt}{文獻引用指令對照}{tbl:cite-forms}{L{0.3\linewidth}L{0.25\linewidth}L{0.35\linewidth}}
+指令 & 顯示結果 & 用途 \\
+\midrule
+\code{\citep{kocher99}} & \citep{kocher99} & 括號引用，放在句尾 \\
+\code{\citet{kocher99}} & \citet{kocher99} & 行文引用，把作者寫進句子 \\
+\code{\citeauthor{kocher99}} & \citeauthor{kocher99} & 只顯示作者 \\
+\code{\citeyear{kocher99}} & \citeyear{kocher99} & 只顯示年份 \\
+\end{tlt}
+
+引用書中的特定段落時，可以用方括號補上頁碼或章節。以下以 \code{companion} 這筆文獻為例，加入「第 42 頁」；套用到自己的論文時，請改成實際引用的位置：
+
+\begin{lstlisting}[language=latex]
+\citep[第 42 頁]{companion}
+\end{lstlisting}
+
+編譯後會顯示為 \citep[第 42 頁]{companion}。頁碼會與文獻引用一起排版，標點和排列方式則由選用的參考文獻樣式決定。
+
+若要一次引用多筆，把識別名稱用逗號隔開，例如 \code{\citep{kocher99,IEEE-1363}}。這種寫法與單筆引用一樣會使用設定檔中的文獻樣式，可以選擇自己較習慣的方式。
+
+\section{參考文獻設定}
+
+請打開 \code{config.yml}，在既有的 \code{bibliography:} 區塊下加入需要的設定。\code{path} 用來指定文獻檔案，\code{style} 決定引用格式；若資料分散在多個檔案，可以在 \code{path} 的清單中依序加入路徑。
+
+\begin{lstlisting}[language=yaml]
+bibliography:
+  path: ["/contents/back/references.bib"] # 可以給多個檔案
+  style: "apa"       # 內建 CSL 樣式名稱，或 .csl 檔案路徑，見下方對照表
+  title: "參~考~文~獻"
+  color: "#0000ff"   # 引用與連結的顏色，要黑白印就改成 "#000000"
+  full: false        # true 會把沒引用到的條目也列出來
+\end{lstlisting}
+
+\code{path} 可以混用 \code{.bib}、Hayagriva \code{.yml}（Typst 版使用的格式）與 CSL JSON／YAML；Hayagriva 檔會在 \code{scripts/gen.py} 執行時自動轉成 CSL JSON，不必自己轉換。不同檔案裡的識別名稱不能重複。
+
+\code{style} 決定文獻的排版邏輯，大致分成三個系統：作者-年份制在正文顯示作者姓名與年份，讀者能一眼看出研究新舊；作者-頁碼制在正文顯示作者與頁碼，方便對照原文出處；數字制則在正文只留數字或上標，清單依編號排列，讀起來最不受干擾。模板以 \code{citation-style-language} 與 \code{citeproc-lua} 處理 CSL 樣式，隨 \TeX{} 發行版安裝的樣式涵蓋各領域慣用的幾種，如下：
+
+\begin{tlt}[notes={\texttt{mla} 是 \texttt{modern-language-association} 的簡稱，兩種寫法都可以。}]{常見文獻格式對照}{tbl:citation-styles}{L{0.12\linewidth}L{0.17\linewidth}L{0.25\linewidth}L{0.26\linewidth}}
+格式 & 系統 & 常見領域 & \code{style} 值 \\
+\midrule
+APA & 作者-年份制 & 心理、教育、社會科學 & \code{apa} \\
+Harvard & 作者-年份制 & 商管、社會科學 & \code{harvard-cite-them-right} \\
+Chicago & 作者-年份制 & 歷史、人文 & \code{chicago-author-date} \\
+MLA & 作者-頁碼制 & 文學、語言、藝術 & \code{mla} \\
+IEEE & 數字制 & 資工、電機、工程 & \code{ieee} \\
+Vancouver & 數字制 & 醫學、護理 & \code{vancouver} \\
+\end{tlt}
+
+\code{style} 直接改成對照表最後一欄的值即可，例如把 \code{"apa"} 改成 \code{"ieee"}，重新編譯後，正文引用與文末清單會一起換成對應樣式，就不用再額外調整 \code{\citep}、\code{\citet} 等指令的寫法。修改後請同時查看正文與參考文獻頁，確認作者、年份或編號的呈現方式。
+
+以上清單只列出最常見的幾種，實際可用的樣式遠不止這些；若系所指定的格式不在其中（例如法律學門常用的 Bluebook），可以自行取得對應的 \code{.csl} 樣式檔，將 \code{style} 改填該檔案的路徑，例如 \code{style: "/misc/my-style.csl"}。
+
+預設的 \code{full: false} 只會列出正文已引用的文獻。若加入新條目後，清單中仍看不到它，請先確認正文是否已經引用，以及識別名稱的大小寫是否一致。需要暫時列出文獻檔中的所有條目時，可以改為 \code{true}，方便逐筆檢查資料。
+
+參考文獻的插入位置由 \code{main.tex} 中的 \code{\references} 決定。以下將它放在第四章之後、附錄之前；若系所要求不同的裝訂順序，移動此行即可，不需要手動複製文獻清單：
+
+\begin{lstlisting}[language=latex]
+\input{contents/chapter04}
+
+\references                          % 參考文獻
+
+\appendix
+\input{contents/back/appendix01}     % 附錄
+\end{lstlisting}
+
+\section{程式碼區塊}
+
+要在論文中列出程式碼，可以直接在章節檔案裡建立程式碼區塊。模板會套用等寬字型與淺灰底色，並依指定的語言進行語法標色。先選擇符合內容的語言名稱，例如 \code{python}、\code{bash} 或 \code{yaml} 等，再填入程式碼即可。
+
+建立程式碼區塊的方法是用 \code{lstlisting} 環境包住需要顯示的程式碼，並在方括號裡用 \code{language=} 指定語言名稱。以 Python 程式的寫法為例：
+
+\begin{codeblock}[language=latex]
+\begin{lstlisting}[language=python]
+def solve(n):
+    return sum(range(n))
+\end{lstlisting}
+\end{codeblock}
+
+如果這段程式需要標題與編號，在方括號裡加上 \code{caption=} 與 \code{label=}。需要從內文引用時，用 \code{\lstref} 引用，寫法和前一章的圖表相同：
+
+\begin{codeblock}[language=latex]
+\begin{lstlisting}[language=python,caption={遞迴版本},label=lst:fib]
+def fib(n):
+    return n if n < 2 else fib(n - 1) + fib(n - 2)
+\end{lstlisting}
+\end{codeblock}
+
+注意到：程式碼預設不顯示標題與編號，下面也採用不加標題的寫法。需要標題時，可以依上面的範例選填 \code{caption}，並用 \code{\lstref{lst:fib}} 引用加上標籤的程式碼。標題預設放在下方；若要移到上方，請將 \code{layout.caption-position.code} 設為 \code{"top"}。
+
+\begin{lstlisting}[language=python]
+def fib(n):
+    return n if n < 2 else fib(n - 1) + fib(n - 2)
+\end{lstlisting}
+
+當程式碼超過一頁時，會與表格一樣自動跨頁，不必手動拆成數個區塊——直接使用 \code{lstlisting} 的區塊，以及加上標題的區塊，都支援跨頁；有標題時，整段程式仍共用一個編號與標題。若要把外部檔案的內容直接放進論文，可以用 \code{\lstinputlisting[language=python]{path/to/file.py}}。
+
+若只是在句子中提到指令或檔名，請用 \code{\code} 包住文字，例如
+
+\begin{lstlisting}[language=latex]
+\code{make release}
+\end{lstlisting}
+
+這種行內寫法會保留等寬字型，字級與基線則和本文一致，不會另外加上底色或框線。因為它是逐字排版，不能寫在 \code{\section} 或 \code{\caption} 這類的大括號引數裡；那些地方請改用 \code{\texttt}，需要顯示反斜線等特殊符號時，再加上 \code{\textbackslash}。
+
+如果需要調整程式碼區塊外觀時，請打開 \code{tw-thesis.sty}，修改程式碼區塊那一節最上方的主題設定即可。此處的設定會套用到共用的程式碼樣式，不必逐一修改各章範例；其中 \code{\twcodesize} 控制區塊字級，行內程式碼仍會跟隨所在段落的字級。以下列出各項設定：
+
+\begin{lstlisting}[language=latex]
+\definecolor{twcodebg}{gray}{0.973}      % 底色
+\definecolor{twcodeblue}{HTML}{4B69C6}   % 行內程式碼與關鍵字的顏色
+\newcommand\twcodesize{\fontsize{11.4}{15}\selectfont}   % 區塊字級
+\setmonofont{DejaVu Sans Mono}           % 等寬字體，可以放自己的字型
+\end{lstlisting}
+
+\begin{tlt}{程式碼樣式參數}{tbl:code-theme}{L{0.28\linewidth}L{0.62\linewidth}}
+參數 & 用途與範例 \\
+\midrule
+\code{\setmonofont} & 等寬字型；例：\code{\setmonofont{DejaVu Sans Mono}}。 \\
+\code{\twcodesize} & 區塊字級；例：本文的 0.95 倍，行內程式碼仍跟隨本文。 \\
+\code{twcodebg} & 區塊底色；例：\code{\definecolor{twcodebg}{gray}{0.973}}。 \\
+\code{twcodeblue} & 行內程式碼與關鍵字的顏色；例：\code{4B69C6}。 \\
+\code{twcodegray} & 註解的顏色。 \\
+\end{tlt}
+
+\section{附錄}
+
+需要收錄問卷、補充資料或較長的推導時，可以放到 \code{contents/back/} 的附錄檔案。請先在 \code{main.tex} 寫一次 \code{\appendix}，再填入標題與內文。以下示範第一份附錄的寫法，編譯後會使用 A、B 等字母編號：
+
+\begin{lstlisting}[language=latex]
+\chapter{問卷內容}\label{appendix-a}
+
+\section{第一部分}
+\end{lstlisting}
+
+\code{main.tex} 裡的 \code{\appendix} 會切換編號方式，並把章的計數歸零。因此接下來的章標題會顯示為「附錄 A」，節標題則使用 \code{A.1}。替換內容時，只需修改「問卷內容」與各節標題，不必在標題中手動輸入字母或編號。
+
+若要新增第二份附錄，請建立另一個 \code{.tex} 檔案，同樣用 \code{\chapter} 寫標題，但不要再寫一次 \code{\appendix}。接著到 \code{main.tex}，在第一份附錄後面加入新檔案的 \code{\input}，編號就會接續為 B。
+
+\code{\appendix} 之後編號的規則是固定的，第二份、第三份附錄仍使用相同設定，不要自己改成 \code{B.1} 或 \code{C.1}。
+
+\section{學校規範更新}
+
+各校的論文格式規範偶爾會修訂，而模板裡的 \code{schools/*.yml} 和 \code{docs/} 收錄的規範 PDF，都只是某個時間點的版本。為了避免在不知情的情況下照著舊規範排版，搭配模板使用的管理工具 \code{tw-thesis} 會定時抓取是否有新的論文規範。
+
+\subsection{提醒運作方式}
+
+另一個專案 \href{https://github.com/TW-Thesis/tw-thesis-updater}{\texttt{tw-thesis-updater}} 每週自動抓取各校的官方規範文件，並公開一份清單，記錄每間學校目前最新版本的日期與雜湊值。在專案資料夾內執行 \code{tw-thesis} 開啟管理介面後，首頁會拿 \code{config.yml} 選定的學校，比對專案 \code{docs/sources.lock.json} 裡記錄的版本；兩者不同便會出現黃色提醒框，說明該校規範已修訂、附上新規範的下載連結。
+
+\begin{lstlisting}[language=bash]
+tw-thesis    # 在專案資料夾內執行；首頁會顯示提醒
+\end{lstlisting}
+
+該檢查只針對選擇的那所學校，一天最多連線一次；離線、或清單尚未發布時不會顯示任何錯誤，也不會影響編譯。
+
+\subsection{提醒後續事宜}
+
+程式僅負責提醒，不會自動修改任何排版設定，也不會判斷新規範和舊規範差在哪裡：各校、各系所對規範的解讀不盡相同，有些條文（例如封面格式、裝訂順序）尚要符合系所額外的規定，所以是否要修改、修改幅度仍由使用者決定。看到提醒後，建議依序處理：
+
+\begin{enumerate}
+\item 從提醒框的連結下載新規範，並實際從頭讀過一遍，切勿只看公告的標題。如果學校網站同時提供「修正對照表」或「修訂說明」，先看那份就能最快能找出有哪幾條規則修改了。
+\item 對照 \code{schools/<學校代碼>.yml}（例如政大是 \code{schools/nccu.yml}），逐項確認邊界、字級、行距、標題格式、封面與審定書、頁碼、參考文獻格式等設定是否需要調整。各項目的設定方式見\ref{cha:layout}；若規範要求的項目在學校設定檔裡找不到對應欄位，先到 \code{schools/default.yml} 查有沒有同名的設定。
+\item 想先試試看、不想直接動學校設定檔時，可以把要調整的項目寫進自己的 \code{config.yml}。它的優先順序高於學校設定，確認結果沒問題後，再決定要不要正式改 \code{schools/}。
+\item 需要的話，把新的 PDF 放進 \code{docs/} 取代舊檔（檔名內含版本日期），以後想對照時才不會拿到舊版本。
+\item 調整完成後重新編譯，逐頁核對封面、審定書、目次、正文第一頁與參考文獻頁，最好再請指導教授或系辦幫忙確認一次。
+\end{enumerate}
+
+\subsection{免責聲明}
+
+本模板的格式設定僅供參考，實際仍請以學校公布的論文規範及系所要求為準。規定往往不只一份：學校公布的是通則，系所、學院或指導教授另有補充要求（例如封面、裝訂、字體或圖表格式）的情況並不少見，這些都不會出現在模板的設定裡。
+
+此外，規範更新提醒是靠定期抓取學校網站，可能晚於學校實際公告才出現，也可能因為學校改版網站而暫時抓不到，所以沒有收到提醒，並不代表規範沒有修訂。提交論文前，請務必再向系所或圖書館確認最新要求。

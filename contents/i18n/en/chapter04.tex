@@ -1,0 +1,209 @@
+\chapter{References, Code and Appendices}\label{cha:refs}
+
+This chapter continues with citing the literature, code, and appendices. The examples of the sections do not depend on one another; copy whichever you need and replace it with your own thesis data.
+
+The files for the references and appendices live in \code{contents/back/}, and the other examples can be written straight into this chapter. When moving or editing content, remember to update the matching lines in \code{main.tex} at the same time, so that the order of the references or appendices does not slip.
+
+\section{Citing the Literature}
+
+A \code{.bib} file is a plain-text bibliography database in \BibTeX{} format; one entry corresponds to one work, in the form \code{@type{key, field = {value}, ...}}. \code{contents/back/references.bib} already holds a few sample entries, one of which looks like this:
+
+\begin{lstlisting}
+@inproceedings{kocher99,
+  author =       {C. Kocher and J. Jaffe and B. Jun},
+  title =        {Differential Power Analysis},
+  editor =       {M. Wiener},
+  booktitle =    {Advances in Cryptology ({CRYPTO}~'99)},
+  series =       {Lecture Notes in Computer Science},
+  volume =       1666,
+  pages =        {388-397},
+  publisher =    {Springer-Verlag},
+  month =        {August},
+  year =         1999
+}
+\end{lstlisting}
+
+\code{@inproceedings} is the entry type (a conference paper); others you will often see are \code{@article} (journal article), \code{@book} and \code{@incollection} (a chapter in a book), and the type affects which fields the reference list shows. \code{kocher99} is the key used to cite the entry in the text and must not repeat within one \code{.bib}; the \code{author}, \code{title}, \code{year} and other fields that follow are the data of the work, filled in one by one, and their order does not affect the result.
+
+Below each search result, Google Scholar has a ``Cite'' button, and at the bottom of its pop-up window is a \BibTeX{} link that copies the whole entry; the pages of library databases (such as IEEE Xplore and the ACM Digital Library) mostly have an ``Export Citation'' or ``Cite'' function too, where you choose the \BibTeX{} format. If you usually work with a reference manager such as Zotero or EndNote, you can also export a \code{.bib} file directly. Once you have an entry, paste it into \code{references.bib}, change the key to a name you can remember (for example \code{surname+year}), and check that it does not repeat an existing entry.
+
+With the data ready, go back to the chapter file and cite with the same key. To put a work at the end of a sentence, use \code{\citep}; to put the author into the sentence, use \code{\citet}. The forms that show only the author or the year are listed too, so choose whichever the sentence needs. These four commands come from the \code{citation-style-language} package, which the template already loads.
+
+\begin{lstlisting}[language=latex]
+\citep{kocher99}       % parenthetical citation
+\citet{kocher99}       % in-text citation
+\citeauthor{kocher99}  % author only
+\citeyear{kocher99}    % year only
+\end{lstlisting}
+
+The differences among the four commands after compiling are as follows; check them first and then replace the key with the work you want to cite:
+
+\begin{tlt}{Comparison of citation commands}{tbl:cite-forms}{L{0.3\linewidth}L{0.25\linewidth}L{0.35\linewidth}}
+Command & Result & Use \\
+\midrule
+\code{\citep{kocher99}} & \citep{kocher99} & Parenthetical, at the end of a sentence \\
+\code{\citet{kocher99}} & \citet{kocher99} & In-text, the author is part of the sentence \\
+\code{\citeauthor{kocher99}} & \citeauthor{kocher99} & Shows only the author \\
+\code{\citeyear{kocher99}} & \citeyear{kocher99} & Shows only the year \\
+\end{tlt}
+
+To cite a particular passage in a book, add a page or chapter in square brackets. The example below uses the entry \code{companion} and adds ``page 42''; when you apply it to your own thesis, change it to the location you actually cite:
+
+\begin{lstlisting}[language=latex]
+\citep[p.~42]{companion}
+\end{lstlisting}
+
+After compiling it appears as \citep[p.~42]{companion}. The page is typeset together with the citation, and the punctuation and arrangement are decided by the reference style you chose.
+
+To cite several works at once, separate the keys with commas, for example \code{\citep{kocher99,IEEE-1363}}. Like a single citation, it uses the reference style from the config, so pick whichever way you are more used to.
+
+\section{Reference Settings}
+
+Open \code{config.yml} and add the settings you need under the existing \code{bibliography:} block. \code{path} names the bibliography files and \code{style} decides the citation format; if your data are spread over several files, list the paths in \code{path} in order.
+
+\begin{lstlisting}[language=yaml]
+bibliography:
+  path: ["/contents/back/references.bib"] # several files allowed
+  style: "apa"       # built-in CSL style name, or the path of a .csl file; see the table below
+  title: "參~考~文~獻"
+  color: "#0000ff"   # colour of citations and links; use "#000000" for black-and-white print
+  full: false        # true also lists entries that were not cited
+\end{lstlisting}
+
+\code{path} may mix \code{.bib}, Hayagriva \code{.yml} (the format of the Typst version) and CSL JSON/YAML; Hayagriva files are converted to CSL JSON automatically when \code{scripts/gen.py} runs, so you need not convert them yourself. A citation key cannot appear in two different files.
+
+\code{style} decides the logic of the references and falls roughly into three systems: author-date shows the author's name and year in the text, so readers see at a glance how old the study is; author-page shows the author and page, which makes it easy to check the source; and numeric keeps only a number or superscript in the text and orders the list by number, the least distracting to read. Those in common use in each field are:
+
+\begin{tlt}[notes={\texttt{mla} is short for \texttt{modern-language-association}; either spelling works.}]{Common reference formats}{tbl:citation-styles}{L{0.12\linewidth}L{0.17\linewidth}L{0.25\linewidth}L{0.26\linewidth}}
+Format & System & Typical field & \code{style} value \\
+\midrule
+APA & Author-date & Psychology, education, social science & \code{apa} \\
+Harvard & Author-date & Business, social science & \code{harvard-cite-them-right} \\
+Chicago & Author-date & History, humanities & \code{chicago-author-date} \\
+MLA & Author-page & Literature, languages, arts & \code{mla} \\
+IEEE & Numeric & Computer science, electrical engineering & \code{ieee} \\
+Vancouver & Numeric & Medicine, nursing & \code{vancouver} \\
+\end{tlt}
+
+Just change \code{style} to the value in the last column of the table, for example \code{"apa"} to \code{"ieee"}, and after recompiling the citations in the text and the list at the end switch to the matching style together, with no need to change how \code{\citep}, \code{\citet} and the others are written. After changing it, look at both the body and the reference page to check how the authors, years or numbers are shown.
+
+The list above shows only the most common ones, and many more styles are available; if the format your department names is not among them, obtain the matching \code{.csl} style file (Bluebook, commonly used in law, is one example) and give its path in \code{style}, for example \code{style: "/misc/my-style.csl"}.
+
+The default \code{full: false} lists only the works cited in the text. If a new entry still does not appear in the list, first check that the text cites it and that the capitalisation of its key matches. To list every entry of the bibliography file for the time being, change it to \code{true} and check the data entry by entry.
+
+The place where the references are inserted is decided by \code{\references} in \code{main.tex}. Below it sits after Chapter 4 and before the appendices; if your department wants a different binding order, just move this line, with no need to copy the reference list by hand:
+
+\begin{lstlisting}[language=latex]
+\input{contents/chapter04}
+
+\references                          % references
+
+\appendix
+\input{contents/back/appendix01}     % appendix
+\end{lstlisting}
+
+\section{Code Blocks}
+
+To list code in the thesis, create a code block right in the chapter file. The template applies a monospaced font and a light grey background and colours the syntax for the language you name. Choose the language name that fits, such as \code{python}, \code{bash} or \code{yaml}, and then enter the code.
+
+A code block is made by wrapping the code to be shown in the \code{lstlisting} environment and naming the language with \code{language=} in square brackets. Here is how a Python program is written:
+
+\begin{codeblock}[language=latex]
+\begin{lstlisting}[language=python]
+def solve(n):
+    return sum(range(n))
+\end{lstlisting}
+\end{codeblock}
+
+If the code needs a caption and a number, add \code{caption=} and \code{label=} in the square brackets. To refer to it from the text, use \code{\lstref}, written just like the figures and tables of the previous chapter:
+
+\begin{codeblock}[language=latex]
+\begin{lstlisting}[language=python,caption={Recursive version},label=lst:fib]
+def fib(n):
+    return n if n < 2 else fib(n - 1) + fib(n - 2)
+\end{lstlisting}
+\end{codeblock}
+
+Note that code shows no caption or number by default, and the one below also uses the form without a caption. When you need a caption, add \code{caption} as in the example above, and refer to code that carries a label with \code{\lstref{lst:fib}}. The caption goes below by default; to move it above, set \code{layout.caption-position.code} to \code{"top"}.
+
+\begin{lstlisting}[language=python]
+def fib(n):
+    return n if n < 2 else fib(n - 1) + fib(n - 2)
+\end{lstlisting}
+
+When code runs longer than a page, it breaks across pages like a table, with no need to split it into several blocks by hand: both a plain \code{lstlisting} block and one with a caption support page breaks, and with a caption the whole listing still shares one number and one caption. To put the contents of an external file into the thesis, use \code{\lstinputlisting[language=python]{path/to/file.py}}.
+
+To mention a command or file name in a sentence, wrap the text in \code{\code}, for example
+
+\begin{lstlisting}[language=latex]
+\code{make release}
+\end{lstlisting}
+
+This inline form keeps the monospaced font, with the size and baseline matching the body, and adds no background or frame. Because it typesets its argument verbatim, it cannot be written inside the braces of commands such as \code{\section} or \code{\caption}; use \code{\texttt} there, and add \code{\textbackslash} when you need to show a backslash or other special symbols.
+
+To change the look of code blocks, open \code{tw-thesis.sty} and edit the theme at the top of the code-block section. The settings apply to the shared code style, so you never change the examples in each chapter one by one; \code{\twcodesize} controls the block size, while inline code still follows the size of the paragraph it is in. The settings are listed below:
+
+\begin{lstlisting}[language=latex]
+\definecolor{twcodebg}{gray}{0.973}      % background
+\definecolor{twcodeblue}{HTML}{4B69C6}   % inline code and keyword colour
+\newcommand\twcodesize{\fontsize{11.4}{15}\selectfont}   % block size
+\setmonofont{DejaVu Sans Mono}           % monospaced font, put your own here
+\end{lstlisting}
+
+\begin{tlt}{Code style parameters}{tbl:code-theme}{L{0.28\linewidth}L{0.62\linewidth}}
+Parameter & Purpose and example \\
+\midrule
+\code{\setmonofont} & Monospaced font; e.g. \code{\setmonofont{DejaVu Sans Mono}}. \\
+\code{\twcodesize} & Block size; e.g. 0.95 times the body, while inline code still follows the body. \\
+\code{twcodebg} & Block background; e.g. \code{\definecolor{twcodebg}{gray}{0.973}}. \\
+\code{twcodeblue} & Colour of inline code and keywords; e.g. \code{4B69C6}. \\
+\code{twcodegray} & Colour of comments. \\
+\end{tlt}
+
+\section{Appendices}
+
+To include a questionnaire, supplementary material or a long derivation, put it in an appendix file under \code{contents/back/}. Write \code{\appendix} once in \code{main.tex} and then enter the title and text. Below is how the first appendix is written; when compiled it is numbered with letters, A, B and so on:
+
+\begin{lstlisting}[language=latex]
+\chapter{Questionnaire}\label{appendix-a}
+
+\section{Part One}
+\end{lstlisting}
+
+The \code{\appendix} in \code{main.tex} switches the numbering style and resets the chapter counter. The chapter headings that follow therefore show as ``Appendix A'' and section headings use \code{A.1}. When replacing the content, change only ``Questionnaire'' and the section headings; never type the letter or number into a heading by hand.
+
+To add a second appendix, create another \code{.tex} file and write its title with \code{\chapter} as well, but do not write \code{\appendix} again. Then add the \code{\input} of the new file after the first appendix in \code{main.tex}, and the numbering continues as B.
+
+The numbering rule after \code{\appendix} is fixed, so the second and third appendices use the same settings; do not change them to \code{B.1} or \code{C.1} yourself.
+
+\section{Regulation Updates}
+
+The universities' thesis format regulations are revised from time to time, and the \code{schools/*.yml} in the template and the regulation PDFs collected in \code{docs/} are only the version of one moment. To keep you from typesetting to an old regulation without knowing it, the management tool \code{tw-thesis} that goes with the template regularly checks whether there is a new thesis regulation.
+
+\subsection{How the Reminder Works}
+
+Another project, \href{https://github.com/TW-Thesis/tw-thesis-updater}{\texttt{tw-thesis-updater}}, fetches the official regulation documents of each school every week and publishes a list recording the date and hash of the latest version for every school. When you run \code{tw-thesis} inside the project folder to open the management interface, its home page compares the school chosen in \code{config.yml} with the version recorded in the project's \code{docs/sources.lock.json}; if they differ, a yellow notice appears saying that the school's regulation has been revised, with a download link to the new one.
+
+\begin{lstlisting}[language=bash]
+tw-thesis    # run inside the project folder; the home page shows the reminder
+\end{lstlisting}
+
+The check covers only the school you selected and connects at most once a day; when you are offline, or the list has not been published yet, no error is shown and compiling is not affected.
+
+\subsection{What to Do After a Reminder}
+
+The program only reminds you: it does not change any layout setting by itself, and it does not work out what differs between the new and old regulation. Schools and departments read the regulations differently, and some provisions (such as the cover format and binding order) must also meet the department's extra rules, so whether to change anything, and how much, is left to you. After seeing a reminder, work through the following in order:
+
+\begin{enumerate}
+\item Download the new regulation from the link in the notice and actually read it from the start; do not go by the headline of the announcement alone. If the school's site also offers a ``comparison of amendments'' or a ``revision note'', look at that first, since it is the fastest way to find which rules changed.
+\item Compare it with \code{schools/<school code>.yml} (for National Chengchi University that is \code{schools/nccu.yml}) and check one by one whether the margins, font sizes, line spacing, heading format, cover and verification letter, page numbers and reference format need adjusting. See \ref{cha:layout} for how each item is set; if an item the regulation requires has no matching field in the school file, first look in \code{schools/default.yml} for a setting of the same name.
+\item To try something out without touching the school file, write the items you want to change into your own \code{config.yml}. Its priority is higher than the school settings, and once the result looks right you can decide whether to change \code{schools/} for good.
+\item If needed, put the new PDF in \code{docs/} to replace the old one (the file name carries the version date), so that you do not pick up the old version when you want to compare later.
+\item After adjusting, compile again and check the cover, verification letter, table of contents, first page of the body and reference page one by one; it is best to have your advisor or the department office confirm once more.
+\end{enumerate}
+
+\subsection{Disclaimer}
+
+The template's format settings are for reference only; in the end follow the thesis regulations published by your school and the requirements of your department. There is often more than one set of rules: what the school publishes is the general rule, and it is not unusual for departments, colleges or advisors to add requirements (for cover, binding, fonts or the format of figures and tables), none of which appear in the template's settings.
+
+In addition, the regulation reminder works by fetching school websites on a schedule, so it may appear later than the school's actual announcement, and it may fail to fetch for a while when a school redesigns its site; not receiving a reminder therefore does not mean the regulation has not been revised. Before submitting your thesis, be sure to confirm the latest requirements once more with your department or the library.

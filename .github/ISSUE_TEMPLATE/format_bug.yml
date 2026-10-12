@@ -1,0 +1,27 @@
+name: 格式問題
+description: 排版和學校規範對不上
+labels: [format]
+body:
+  - type: input
+    id: school
+    attributes:
+      label: 學校代碼
+      placeholder: 例如 nccu
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes:
+      label: 規範怎麼寫
+      description: 貼上條文或頁碼與規範網址。
+    validations: { required: true }
+  - type: textarea
+    id: actual
+    attributes:
+      label: 目前編譯出來的樣子
+      description: 可以附截圖。請勿附含個人資料的論文內容。
+    validations: { required: true }
+  - type: input
+    id: xelatex
+    attributes:
+      label: XeLaTeX 版本
+      description: 執行 `xelatex --version`

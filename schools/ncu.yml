@@ -1,0 +1,41 @@
+# 國立中央大學 National Central University
+#
+# Source: docs/國立中央大學-1050127-碩博士論文規範.pdf (學位論文撰寫體例參考)
+#   https://in.ncu.edu.tw/~phi/docs/phdForm/dissertationWritingStyleReference.pdf
+# Only what differs from schools/default.yml, which documents every key.
+#
+# Not expressible yet: sections numbered 2-1 / 2-1-1 (arabic) under chapters
+# 一、二、; at least 25 lines per page; references numbered [1] in citation
+# order; figures/tables numbered continuously; page number 1.5cm from the
+# bottom edge; advisor recommendation letter; no director line; spine.
+
+university: "國立中央大學"
+university-en: "National Central University"
+
+layout:
+  margin: # cm
+    top: 2.5
+    bottom: 2.5
+    left: 3
+    right: 2
+  line-height: 1.5 # 1.5 or 2
+
+titles:
+  toc: "目~錄"
+  lof: "圖~目~錄"
+  lot: "表~目~錄"
+
+sections:
+  denotation: "符號說明"
+
+verification:
+  degree-line: "{university}{degree}班研究生"
+  title: "論~文~口~試~委~員~審~定~書"
+  statement: "{institute}{author}研究生所提之論文，經本委員會審議，認定符合{degree}資格標準。"
+
+strings:
+  chapter: ["", "、"] # 一、緒論
+  committee: "召集人："
+  committee-advisor: ""
+
+# No watermark file: none is published and the upload manual never asks for one.

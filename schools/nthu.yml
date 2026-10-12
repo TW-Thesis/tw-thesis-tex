@@ -1,0 +1,29 @@
+# 國立清華大學 National Tsing Hua University
+#
+# Source: docs/國立清華大學-1140529-碩博士論文規範.pdf
+#   https://registra.site.nthu.edu.tw/var/file/211/1211/img/153498830.pdf
+# Only what differs from schools/default.yml, which documents every key.
+#
+# Not expressible yet: cover lists student ID and bilingual lines in a fixed
+# order; advisor recommendation letter; verification letter has no director
+# line; figures numbered per section (圖 3-1-2); 5-7 keywords; spine.
+
+university: "國立清華大學"
+university-en: "National Tsing Hua University"
+
+layout:
+  margin: # cm
+    bottom: 2.5
+
+verification:
+  title: "考~試~委~員~審~定~書"
+  statement: "{institute}{author}君（學號{id}）所提之論文，經本委員會審查，符合{degree}資格標準。"
+
+strings:
+  committee: "主持人："
+  committee-advisor: ""
+
+watermark: # github.com/HW-Lee/nthu-thesis-template (raster, 270px); since
+# 2025-05-13 the NTHU repository stamps its own watermark on upload
+  image: "/assets/watermarks/nthu.pdf"
+  width: 80 # %

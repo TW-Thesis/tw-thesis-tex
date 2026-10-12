@@ -1,0 +1,27 @@
+# 國立臺灣大學 National Taiwan University
+#
+# Source: docs/國立臺灣大學-1121020-碩博士論文規範.pdf
+#   https://www.lib.ntu.edu.tw/doc/cl/THESISSAMPLE.doc
+# Only what differs from schools/default.yml, which documents every key.
+#
+# Not expressible yet: cover page margins (top 4cm, bottom 3cm); English text
+# uses double line spacing; spine; 5-7 keywords.
+
+university: "國立臺灣大學"
+university-en: "National Taiwan University"
+
+cover:
+  size: # pt
+    title: 18
+    title-en: 18
+
+verification:
+  statement: "本論文係{author}君（{id}）在{university}{institute}完成之{degree}學位{type}，於民國{roc}年{month}月{day}日承下列考試委員審查通過及口試及格，特此證明。"
+
+strings:
+  director: "系（所、學位學程）主管："
+
+watermark: # official: www.lib.ntu.edu.tw/doc/CL/watermark.pdf (raster, 207px)
+  image: "/assets/watermarks/ntu.pdf"
+  width: 45 # %
+  opacity: 50 # %, the regulation asks for 50% scale and 50% opacity

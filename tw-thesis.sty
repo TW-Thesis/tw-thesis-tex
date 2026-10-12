@@ -1,0 +1,281 @@
+% tw-thesis.sty -- author-facing helpers for tw-thesis.cls: code blocks,
+% figures, tables and filler text. It is loaded by the class and only makes
+% sense with it: page layout, headings and references stay in tw-thesis.cls,
+% which this file reads through \twget.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tw-thesis}[2026/10/12 helpers for tw-thesis.cls]
+\@ifclassloaded{tw-thesis}{}{%
+  \PackageError{tw-thesis}{tw-thesis.sty is part of tw-thesis.cls}{%
+    Load the template with \string\documentclass{tw-thesis}; the package is read by the class.}%
+  \endinput}
+
+\RequirePackage{metalogo}   % \XeLaTeX
+\providecommand\BibTeX{B\kern-.05em{\scshape i\kern-.025em b}\kern-.08em\TeX}
+
+% ==========================================================================
+% code
+% ==========================================================================
+% Code blocks in the style of latex's minted: a light background, no frame and
+% no line numbers -- pdf text is always copyable, so numbers would end up in
+% anything pasted out of the listing. Caption position is configured by
+% layout.caption-position.code in config.yml.
+%
+%   \begin{lstlisting}[language=yaml]            % plain listing
+%   \begin{lstlisting}[caption={...},label=lst:x] % with a caption and a number
+%   \code{--font-path}                            % inline
+
+\RequirePackage{listings}
+\RequirePackage{xparse}
+
+% ---- theme: edit here -----------------------------------------------------
+\definecolor{twcodebg}{gray}{0.973}      % background
+\definecolor{twcodeblue}{HTML}{4B69C6}   % inline code and keywords
+\definecolor{twcodegray}{gray}{0.45}     % comments
+\newcommand\twcodesize{\fontsize{11.4}{15}\selectfont}   % 0.95 x body size
+% monospace font: the first one that exists; add your own first
+\IfFontExistsTF{DejaVu Sans Mono}{%
+  \setmonofont{DejaVu Sans Mono}}{%
+  \setmonofont{lmmono10-regular.otf}[BoldFont={lmmonolt10-bold.otf},
+    ItalicFont={lmmono10-italic.otf},BoldItalicFont={lmmonolt10-boldoblique.otf}]}
+% ---------------------------------------------------------------------------
+
+\renewcommand\lstlistingname{程式碼}
+\lstdefinelanguage{latex}[LaTeX]{TeX}{}
+\lstdefinelanguage{yaml}{comment=[l]{\#},morestring=[b]",morestring=[b]',
+  morekeywords={true,false,null}}
+\lstdefinelanguage{plain}{}
+
+\edef\tw@codecappos{\twifstr{\twget{d.caption.code}}{top}{t}{b}}
+\lstset{
+  basicstyle=\ttfamily\twcodesize,
+  commentstyle=\color{twcodegray},
+  keywordstyle=\color{twcodeblue},
+  stringstyle=\color{twcodeblue},
+  backgroundcolor=\color{twcodebg},
+  frame=single,rulecolor=\color{twcodebg},framerule=0pt,
+  framesep=0.6em,xleftmargin=0.6em,xrightmargin=0.6em,
+  aboveskip=0.6em,belowskip=0.6em,
+  breaklines=true,breakatwhitespace=false,columns=fullflexible,keepspaces=true,
+  showstringspaces=false,numbers=none,upquote=true,
+  captionpos=\tw@codecappos,
+}
+
+% inline code shares the surrounding text size and baseline
+\NewDocumentCommand\code{v}{{\xeCJKsetup{CJKecglue={}}\ttfamily\color{twcodeblue}#1}}
+
+% same look as lstlisting, but its own name so a listing can show a
+% lstlisting -- an `\end{lstlisting}` inside would end the outer one
+\lstnewenvironment{codeblock}[1][]{\lstset{#1}}{}
+
+% ==========================================================================
+% figures
+% ==========================================================================
+% Figure helpers: one image, images side by side, or images in a grid.
+%
+%   \fig[0.6\linewidth]{figures/samples/architecture.png}{研究架構}{fig:one}
+%
+%   \begin{figrow}{取樣策略}{fig:row}
+%     \subfig{figures/samples/sampling-uniform.png}{均勻}
+%     \subfig{figures/samples/sampling-importance.png}{重要性}
+%   \end{figrow}
+%
+%   \begin{figgrid}[rows=2,columns=2]{2x2}{fig:grid}
+%     \subfig{figures/samples/a.png}{線性模型} ...
+%   \end{figgrid}
+%
+% Caption and label are the last arguments; leave the label `{}` for none.
+% The caption goes above or below as layout.caption-position.image says.
+%
+% A figure stays where it is written (placement=none, the default). Add
+% `placement=auto` to \fig, figrow or figgrid to let LaTeX float it as a
+% normal [htbp] figure instead: \fig[width=0.6\linewidth,placement=auto]{...}.
+% A bare length, \fig[0.6\linewidth]{...}, still means the width.
+
+\RequirePackage{pgfkeys}
+
+\newlength\twfiggutter \setlength\twfiggutter{1em}
+\newlength\twfigrowgap \setlength\twfigrowgap{0.8em}
+
+% a captioned block that stays in one piece; the caption number and label are
+% attached by \captionof so nothing floats away
+\newcommand\tw@capblock[5]{% kind, position, caption, label, body
+  \par\addvspace{0.8em}\noindent
+  \begin{minipage}{\linewidth}\centering\setlength\parskip{0pt}
+    \twifstr{#2}{top}{\captionof{#1}{#3}\ifblank{#4}{}{\label{#4}}\nopagebreak\vspace{0.4em}}{}%
+    #5\par
+    \twifstr{#2}{top}{}{\vspace{0.2em}\captionof{#1}{#3}\ifblank{#4}{}{\label{#4}}}%
+  \end{minipage}\par\addvspace{0.8em}}
+
+% placement=auto: the same block as a standard [htbp] float
+\newcommand\tw@floatblock[4]{% position, caption, label, body
+  \begin{figure}[htbp]\centering\setlength\parskip{0pt}
+    \twifstr{#1}{top}{\caption{#2}\ifblank{#3}{}{\label{#3}}\vspace{0.4em}}{}%
+    #4\par
+    \twifstr{#1}{top}{}{\vspace{0.2em}\caption{#2}\ifblank{#3}{}{\label{#3}}}%
+  \end{figure}}
+
+\newcommand\tw@figure[4]{% placement, caption, label, body
+  \twifstr{#1}{auto}{%
+    \tw@floatblock{\twget{d.caption.image}}{#2}{#3}{#4}}{%
+  \twifstr{#1}{none}{%
+    \tw@capblock{figure}{\twget{d.caption.image}}{#2}{#3}{#4}}{%
+    \PackageError{tw-thesis}{placement=#1 is not valid}{Use placement=none or placement=auto.}}}}
+
+\pgfkeys{/tw/fig/.cd,
+  width/.store in=\tw@figwidth, placement/.store in=\tw@figplacement}
+\newcommand\tw@figopts[1]{%
+  \ifblank{#1}{}{\in@{=}{#1}\ifin@\pgfkeys{/tw/fig/.cd,#1}\else\def\tw@figwidth{#1}\fi}}
+
+\NewDocumentCommand\fig{O{} m m m}{%
+  \def\tw@figwidth{0.8\linewidth}\def\tw@figplacement{none}%
+  \tw@figopts{#1}%
+  \tw@figure{\tw@figplacement}{#3}{#4}{\includegraphics[width=\tw@figwidth]{#2}}}
+
+% ---- grids -----------------------------------------------------------------
+\newcounter{tw@sub}
+\newcount\tw@nitems
+\newcount\tw@col
+\newif\iftw@rowopen
+
+\pgfkeys{/tw/grid/.cd,
+  columns/.store in=\tw@gcols, rows/.store in=\tw@grows,
+  gutter/.code={\setlength\twfiggutter{#1}},
+  row-gutter/.code={\setlength\twfigrowgap{#1}},
+  width/.store in=\tw@gwidth,
+  placement/.store in=\tw@gplacement,
+  columns/.default=2}
+
+\newcommand\tw@cell[2]{% path, sub-caption
+  \stepcounter{tw@sub}%
+  \begin{minipage}[c]{\tw@cw}\centering
+    \includegraphics[width=\tw@gwidth\linewidth]{#1}%
+    \ifblank{#2}{}{\par\vspace{0.3em}{\small(\alph{tw@sub}) #2}}%
+  \end{minipage}%
+  \advance\tw@col by 1
+  \ifnum\tw@col=\tw@gcols\relax
+    \par\vspace{\twfigrowgap}\noindent\tw@col=0
+  \else
+    \hspace{\twfiggutter}%
+  \fi}
+
+\newcommand\tw@gridbody{%
+  \setcounter{tw@sub}{0}\tw@col=0
+  \setlength\tw@cw{\dimexpr(\linewidth-\tw@gcols\twfiggutter+\twfiggutter)/\tw@gcols\relax}%
+  \noindent\tw@items}
+
+\newlength\tw@cw
+
+% like Typst, a given `rows` is a limit: the figures must fit rows * columns
+\newcommand\tw@checkrows{%
+  \ifdefempty\tw@grows{}{%
+    \ifnum\tw@nitems>\numexpr\tw@grows*\tw@gcols\relax
+      \PackageError{tw-thesis}{figgrid has \the\tw@nitems\space figures but rows*columns is only
+        \the\numexpr\tw@grows*\tw@gcols\relax}{%
+        Raise rows or columns, or omit rows to let the number of rows follow the figures.}%
+    \fi}}
+
+\NewDocumentEnvironment{figgrid}{O{} m m}{%
+  \def\tw@gcols{2}\def\tw@grows{}\def\tw@gwidth{1}\def\tw@gplacement{none}%
+  \pgfkeys{/tw/grid/.cd,#1}%
+  \def\tw@gcap{#2}\def\tw@glab{#3}%
+  \gdef\tw@items{}\global\tw@nitems=0
+  \renewcommand\subfig[2]{\global\advance\tw@nitems by 1
+    \g@addto@macro\tw@items{\tw@cell{##1}{##2}}}%
+  \ignorespaces}{%
+  \tw@checkrows
+  \tw@figure{\tw@gplacement}{\tw@gcap}{\tw@glab}{\tw@gridbody}}
+\newcommand\subfig[2]{\PackageError{tw-thesis}{\string\subfig\space outside figrow/figgrid}{}}
+
+% side by side is a grid with one row
+\NewDocumentEnvironment{figrow}{O{} m m}{%
+  \def\tw@gcols{1}\def\tw@grows{}\def\tw@gwidth{1}\def\tw@gplacement{none}%
+  \pgfkeys{/tw/grid/.cd,#1}%
+  \def\tw@gcap{#2}\def\tw@glab{#3}%
+  \gdef\tw@items{}\global\tw@nitems=0
+  \renewcommand\subfig[2]{\global\advance\tw@nitems by 1
+    \g@addto@macro\tw@items{\tw@cell{##1}{##2}}}%
+  \ignorespaces}{%
+  \edef\tw@gcols{\the\tw@nitems}%
+  \tw@figure{\tw@gplacement}{\tw@gcap}{\tw@glab}{\tw@gridbody}}
+
+% ==========================================================================
+% tables
+% ==========================================================================
+% 三線表 (three-line table): a rule above the header, one below it, one under
+% the last row, and nothing else -- booktabs' look.
+%
+%   \begin{tlt}[notes={資料來源：各校教務處。}]{各校浮水印}{tbl:watermark}{lc}
+%     學校 & 浮水印 \\
+%     \midrule
+%     政大 & 有 \\
+%     臺大 & 有 \\
+%   \end{tlt}
+%
+% Arguments after the options: caption, label, column spec. `tlt` draws the
+% top and bottom rules itself; the rule under the header is yours (\midrule).
+% `tbl` is the same without any rule, for a table drawn with \hline / |c|.
+% Options: width=<length> stretches X columns (tabularx); notes=... prints
+% 「註：...」 under the bottom rule; notes-label=... changes that prefix;
+% thick=, thin= set the rule weights for this table only.
+% For a table too long for one page use longtable with booktabs instead.
+
+\RequirePackage{multirow}
+\RequirePackage{tabularx}
+\RequirePackage{longtable}
+\RequirePackage{makecell}
+
+% weight of the rules for every table: change here
+\setlength\heavyrulewidth{0.08em}   % \toprule, \bottomrule
+\setlength\lightrulewidth{0.05em}   % \midrule, \cmidrule
+\setlength\cmidrulewidth{0.05em}
+\setlength\tabcolsep{0.6em}
+\renewcommand\arraystretch{1.3}
+
+\pgfkeys{/tw/tbl/.cd,
+  width/.store in=\tw@tblwidth,
+  notes/.store in=\tw@tblnotes,
+  notes-label/.store in=\tw@tblnoteslabel,
+  thick/.code={\setlength\heavyrulewidth{#1}},
+  thin/.code={\setlength\lightrulewidth{#1}\setlength\cmidrulewidth{#1}}}
+
+\newcommand\tw@tblnoteslabel@default{\iftw@zh 註：\else Note.~\fi}
+
+\newcommand\tw@tblinit[1]{%
+  \def\tw@tblwidth{}\def\tw@tblnotes{}\def\tw@tblnoteslabel{\tw@tblnoteslabel@default}%
+  \pgfkeys{/tw/tbl/.cd,#1}}
+
+\newcommand\tw@tblend{%
+  \ifdefempty\tw@tblnotes{}{%
+    \par\vspace{0.5em}\noindent\begin{minipage}{\linewidth}\raggedright
+      {\fontsize{10.8}{16.2}\selectfont\tw@tblnoteslabel\tw@tblnotes}\end{minipage}}}
+
+\NewDocumentEnvironment{tbl}{O{} m m m}{%
+  \tw@tblinit{#1}%
+  \def\tw@tcap{#2}\def\tw@tlab{#3}%
+  \par\addvspace{0.8em}\noindent
+  \begin{minipage}{\linewidth}\centering\setlength\parskip{0pt}
+  \twifstr{\twget{d.caption.table}}{top}{\captionof{table}{#2}\ifblank{#3}{}{\label{#3}}\nopagebreak\vspace{0.4em}}{}%
+  \ifdefempty\tw@tblwidth{\begin{tabular}{#4}}{\begin{tabularx}{\tw@tblwidth}{#4}}}{%
+  \ifdefempty\tw@tblwidth{\end{tabular}}{\end{tabularx}}\par
+  \tw@tblend
+  \twifstr{\twget{d.caption.table}}{top}{}{\vspace{0.3em}\captionof{table}{\tw@tcap}\ifblank{\tw@tlab}{}{\label{\tw@tlab}}}%
+  \end{minipage}\par\addvspace{0.8em}}
+
+\NewDocumentEnvironment{tlt}{O{} m m m}{%
+  \begin{tbl}[#1]{#2}{#3}{#4}\toprule}{\bottomrule\end{tbl}}
+
+% fixed-width, left-aligned paragraph column; use it instead of tabularx's X
+% when a cell holds \code (verbatim does not survive tabularx)
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% ==========================================================================
+% filler text, so a draft can be paginated before the real text exists
+%   \zhlorem   five paragraphs of Chinese filler   \zhlorem[2]  fewer
+%   \enlorem   five paragraphs of latin filler     \enlorem[8]  more
+% ==========================================================================
+\RequirePackage{zhlipsum}
+\RequirePackage{lipsum}
+\newcommand\zhlorem[1][5]{\zhlipsum[1-#1]}
+\newcommand\enlorem[1][5]{\lipsum[1-#1]}
+\endinput

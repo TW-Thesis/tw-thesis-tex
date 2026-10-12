@@ -1,0 +1,27 @@
+# 國立中正大學 National Chung Cheng University
+#
+# Source: docs/國立中正大學-0900100-碩博士論文規範.pdf (90年01月修訂; day not given)
+#   https://colmgt.ccu.edu.tw/var/file/22/1022/img/1115/16.IMF-ThesisRegulation.pdf
+# The current university rule (學位論文管理要點, 112.05.08) leaves the format
+# to departments; this 90年 regulation is the last university-wide one.
+# Only what differs from schools/default.yml, which documents every key.
+#
+# The Chinese text gives a 2cm right margin; its English translation says 3cm.
+# The Chinese text is used below.
+#
+# Not expressible yet: English text uses double line spacing; page number
+# 1.5cm from the bottom edge; cover colour by graduation year; spine.
+
+university: "國立中正大學"
+university-en: "National Chung Cheng University"
+
+layout:
+  margin: # cm
+    top: 2.5
+    bottom: 2.5
+    left: 3
+    right: 2
+
+watermark: # github.com/shps951023/CCU-Thesis-Overleaf-LaTeX-Template Images/watermark.jpg (800px)
+  image: "/assets/watermarks/ccu.png"
+  width: 50 # %

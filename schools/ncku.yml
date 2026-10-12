@@ -1,0 +1,34 @@
+# 國立成功大學 National Cheng Kung University
+#
+# Source: docs/國立成功大學-1100106-碩博士論文規範.pdf
+#   https://www.cc.ncku.edu.tw/rule/content.php?sn=684
+# Only what differs from schools/default.yml, which documents every key.
+#
+# Not expressible yet: cover margins (top 23mm, bottom 30mm, left/right 20mm);
+# list of tables comes before list of figures; English extended abstract
+# (800-1200 words) for Chinese theses. Fonts, sizes and line spacing are not
+# regulated, and neither is the wording of the examination certificate.
+
+university: "國立成功大學"
+university-en: "National Cheng Kung University"
+
+layout:
+  margin: # cm
+    top: 2.3
+    bottom: 3.5 # includes the page number
+    left: 3
+    right: 2.5
+
+titles:
+  toc: "目~錄"
+  lof: "圖~目~錄"
+  lot: "表~目~錄"
+
+sections:
+  denotation: "符號"
+
+verification:
+  title: "學~位~考~試~合~格~證~明"
+
+watermark: # github.com/wengan-li/ncku-thesis-template-latex (official A4, vector)
+  image: "/assets/watermarks/ncku.pdf"

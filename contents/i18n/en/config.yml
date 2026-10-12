@@ -1,0 +1,43 @@
+# Sample thesis data for the English tutorial (main-en.tex). It is only read when
+# that tutorial is built: `make compile-en`. Your own thesis uses ../../../config.yml.
+#
+# The cover and the verification page are bilingual under the schools' own rules,
+# so the Chinese fields hold Chinese placeholders and the fields ending in -en
+# hold the English text, as in your own config.yml.
+title: "○○○○○○"
+title-en: "Thesis Title"
+author: "○○○"
+author-en: "Author Name"
+id: "000000000"
+advisor: "○○○"
+advisor-en: "Advisor Name"
+college: "○○學院"
+college-en: "College of Science"
+institute: "○○學系"
+institute-en: "Department of Computer Science"
+degree: "碩士"
+degree-en: "Master"
+type: "論文"
+type-en: "Thesis"
+date: "2027-01-15" # publication, YYYY-MM-DD
+oral-date: "2027-01-10" # defense, YYYY-MM-DD
+keywords: ["LaTeX", "論文", "模板"]
+keywords-en: ["LaTeX", "Thesis", "Template"]
+
+layout:
+  language: "english" # prefixes become Figure, Table, Chapter, Section
+
+titles:
+  toc: "Table of Contents"
+  lof: "List of Figures"
+  lot: "List of Tables"
+
+cross-ref:
+  numbering: ~ # Arabic numerals for an English thesis
+  chapter: "Chapter {C}"
+  section: "Section {C}.{S}"
+  subsection: "Section {C}.{S}.{B}"
+
+bibliography:
+  path: ["/contents/back/references.bib"]
+  title: "References"

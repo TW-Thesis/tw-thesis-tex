@@ -1,0 +1,44 @@
+# 國立臺灣海洋大學 National Taiwan Ocean University
+#
+# Source: docs/國立臺灣海洋大學-1140806-碩博士論文規範.pdf
+#   https://academic.ntou.edu.tw/p/405-1005-5183,c1144.php
+# Only what differs from schools/default.yml, which documents every key.
+#
+# Not expressible yet: a blank line between a heading and its text; abstract,
+# TOC and references titles 14pt (chapters are 16pt); each part starts on an
+# odd page; footnotes 10pt; title page with NTOU watermark; 4-6 keywords;
+# verification letter has an advisor line and no director line; spine.
+
+university: "國立臺灣海洋大學"
+university-en: "National Taiwan Ocean University"
+
+layout:
+  line-height: 1 # single spacing
+  margin: # cm
+    top: 2.54
+    bottom: 2.54
+    left: 3.17
+    right: 3.17
+  heading:
+    size: [16, 14, 12, 12] # pt
+    weight: "bold"
+
+outline:
+  title-size: 14 # pt
+  page-numbering: "I"
+
+sections:
+  denotation: "詞彙或特殊符號說明"
+
+verification:
+  degree-line: "{university}{institute}"
+  title: "學~位~考~試~及~格~證~明~書"
+  statement: "{author}君之{degree}學位論文經考試及格特此證明"
+
+strings:
+  committee: "考試委員："
+  committee-advisor: ""
+
+watermark: # github.com/chungyuandye/NTOU_Thesis Watermark_JPG.jpg (1181px)
+  image: "/assets/watermarks/ntou.jpg"
+  width: 50 # %

@@ -1,0 +1,194 @@
+\chapter{Layout Settings}\label{cha:layout}
+
+After the setup in Chapter 1, compile once, check the font size, line spacing and page margins against your department's requirements, and then change whatever needs changing. This chapter explains where each of these settings lives and how to use it; change one item at a time and check the result before moving on.
+
+The \code{YAML} examples below can all be written straight into \code{config.yml} to override the defaults. If the file already has \code{layout:}, put the new settings under the existing block, keep the indentation shown in the example, and do not create a second block with the same name. After every change, run \code{python3 scripts/gen.py} again (or just use \code{make}) so that \LaTeX{} sees the new values.
+
+\section{Fonts and Sizes}
+
+Open \code{config.yml} and set the body font and size under \code{layout:}. The fonts used by default are listed below; if the display is fine now, keep these values and change only what your department requires.
+
+\begin{lstlisting}[language=yaml]
+layout:
+  language: "chinese" # chinese | english, decides the heading language
+  font-latin: ["EB Garamond", "Tinos"] # one or several, tried in order
+  font-cjk: ["TW-MOE-Std-Kai", "DFKai-SB"]
+  font-size: 12 # pt
+\end{lstlisting}
+
+The template looks through each font list in order and uses the first font it can find: for Latin text EB Garamond first, then Tinos (an open-source font with exactly the same glyph widths as Times New Roman) if that is missing, and for Chinese the \href{https://language.moe.gov.tw/material/info?m=9fe3fe82-8bbf-44c0-961d-873ea079e284}{Ministry of Education Standard Kai} (licensed CC BY-ND 3.0 Taiwan; credit ``Ministry of Education, R.O.C.'' when you cite it). All of these font files are bundled in \code{fonts/} and loaded by file from \code{tw-thesis.cls}, so no installation is needed. Both English fonts are under SIL OFL 1.1 and can be redistributed freely. If your department explicitly requires Times New Roman, change \code{font-latin} to \code{"Tinos"}: its widths match Times New Roman glyph for glyph and its shapes are close, so page breaks do not shift. If you must use the original font, it has redistribution limits and the template cannot ship it; install it on your own computer first and then enter \code{"Times New Roman"}. EB Garamond's widths differ from Times New Roman's (about 7\% on average), so switching to it changes every page break in the thesis.
+
+To use another font from the system or from your department, enter its name in \code{font-latin} or \code{font-cjk}; fonts that are not in \code{fonts/} must already be installed on the system. The place where people get stuck is that the name you enter has to match the family name recorded inside the font file, not the name shown on the install screen or on a font website; the two sometimes differ. \tblref{tbl:font-name} lists ways to look up the family name in a few common situations.
+
+\begin{tlt}[notes={When in doubt, always go by the name that \texttt{fc-list} prints.}]{Looking up a font family name}{tbl:font-name}{L{0.28\linewidth}L{0.62\linewidth}}
+Situation & How to look it up \\
+\midrule
+A font already installed on the system & Run \code{fc-list : family}; the printed name is the family name \XeLaTeX{} actually reads, and entering it in the config is the most reliable. \\
+Fonts installed on macOS & Open Font Book and select the font to see its name. \\
+Fonts installed on Windows & Open ``Settings $\rightarrow$ Personalization $\rightarrow$ Fonts'' and click into the font's page to see the name. \\
+Downloaded from Google Fonts etc. & The name shown on the page is usually the family name, but install the font on the system after downloading and confirm it once with \code{fc-list}. \\
+\end{tlt}
+
+To make the body 14 points, change \code{font-size} to \code{14} under \code{layout:}, with no unit after the number. Afterwards, find a page that mixes Chinese and English and check that both scripts look the right size. Headings have their own size settings, which you change separately in the \code{heading:} block below.
+
+\section{Line Height and Paragraphs}
+
+Line spacing, paragraph spacing, first-line indent and justification all sit under \code{layout:}. Pick a page with several full paragraphs, apply the settings below, and compare the distance between lines and between paragraphs and the position of each paragraph's first line.
+
+\begin{lstlisting}[language=yaml]
+layout:
+  line-height: 1.5      # 1.5 times the font size
+  par-spacing: ~        # ~ follows line height; a number overrides it in em
+  first-line-indent: 2  # em; Chinese paragraphs conventionally indent two characters
+  justify: true         # justify both edges
+\end{lstlisting}
+
+When adjusting paragraphs, start with \code{line-height} and \code{first-line-indent}. With 12 pt text and a line height of \code{1.5}, the baseline distance of an ordinary line is 18 pt; a first-line indent of \code{2} leaves the width of two characters. If your department asks for no paragraph indent, set \code{first-line-indent} to \code{0}.
+
+\code{par-spacing} controls the gap between two paragraphs. Its default value, \code{~}, follows \code{line-height}, keeping the baseline distance across a paragraph break equal to the normal line spacing. For example, \code{line-height: 1.5} produces a paragraph gap of \code{0.5em}; together with the 1em line box, adjacent paragraphs remain on the same 1.5-line-height grid without an extra blank line.
+
+If your school or department specifies a different paragraph gap, replace \code{~} with a number to override it independently. The number is measured in \code{em}, but you do not include the unit in \code{YAML}; for example, \code{par-spacing: 1.2} adds more white space between paragraphs. An explicit value no longer changes when you adjust \code{line-height}. Text separated by a blank line in the chapter source forms separate paragraphs, so you can compare two neighbouring ones to see the effect.
+
+\code{config.yml} also has a \code{line-box}. It is the setting the Typst version uses to pin the top and bottom edges of a line box; \LaTeX{} typesets directly from the baseline distance and has no use for it, so filling it in has no effect. It stays only so that both versions can share one config file.
+
+\section{Margins and Paper}
+
+The paper size is set by \code{paper}, and the four margins are set separately under \code{margin:}. The example uses A4; if you have chosen a school format, look at the result first and add only the margin values you need to override.
+
+\begin{lstlisting}[language=yaml]
+layout:
+  paper: "a4"
+  margin: # cm
+    top: 3
+    bottom: 2
+    left: 3
+    right: 3
+\end{lstlisting}
+
+Enter the margin in all four directions under \code{margin:}, in centimetres, as a plain number. For example, if your department wants 3.5 cm on the left, set \code{left} to \code{3.5}, not \code{3.5cm}. If you change only the left, the other three margins keep the school setting or the default, so you do not have to rewrite them all.
+
+After changing them, look at both the body and the cover to check that headings, figures, tables and the cover details still fit. The cover margins are set separately by \code{cover.margin}, and an unset side falls back to the body margin; the cover blocks are placed with fixed and flexible gaps. If your thesis title is long, adjust the sizes or gaps under \code{cover:} to keep the text from being crowded.
+
+\section{Headings and Numbering}
+
+The size, alignment and spacing of headings are all collected in the \code{layout.heading} block. The lists below follow the heading levels, so compare the look of chapters, sections and subsections first and then adjust the values at the matching position.
+
+\begin{lstlisting}[language=yaml]
+layout:
+  heading:
+    size: [18, 16, 14, 12]                     # pt, levels 1 to 4
+    weight: "regular"                          # regular | bold
+    align: ["center", "center", "left", "left"]
+    line-height: 1.2                           # spacing inside a heading
+    gap-above: [1, 0.8, 0.8, 0.6]              # em
+    gap-below: [1, 0.5, 0.4, 0.3]              # em
+    number-gap: [1, 1, 0, 0]                   # em, between number and title
+\end{lstlisting}
+
+The lists above correspond to heading levels one through four in order. For example, to change the size of chapter headings, edit the first value of \code{size}; for section headings, the second. Keep all four positions and replace only the values you need, so each level stays easy to match.
+
+To change the words around the numbers, add \code{strings:} to \code{config.yml}, at the same level as \code{layout:}. The example below makes chapters and sections use the ``Chapter 1'' and ``Section 1'' style (in Chinese, 第一章 and 第一節):
+
+\begin{lstlisting}[language=yaml]
+strings:
+  chapter: ["第", "章"]   # 第一章
+  section: ["第", "節"]   # 第一節
+  subsection: "、"        # 一、
+  appendix: ["附錄 ", ""] # 附錄 A
+\end{lstlisting}
+
+Back in a chapter file, use \LaTeX{}'s sectioning commands to choose the level. \code{\chapter} is a chapter heading, \code{\section} a section heading, and so on. Write the heading text in braces, arranged according to the levels of your content:
+
+\begin{lstlisting}[language=latex]
+\chapter{Method}          % level 1, number follows the order of appearance
+\section{Experiment}      % level 2, printed as Section 1
+\subsection{Data}         % level 3, printed as 1.
+\subsubsection{Cleaning}  % level 4, not numbered
+\end{lstlisting}
+
+When compiling, level-one headings start a new page automatically and chapter numbers follow the order of appearance. So just write ``Method'' as the title; there is no need to add ``Chapter 3'' by hand or insert a page break. After adding chapters or changing their order, recompiling updates the numbers; because the table of contents and cross-references rely on the auxiliary file, \LaTeX{} must run twice to be fully correct, and \code{latexmk} takes care of that automatically.
+
+\section{Caption Position for Figures, Tables and Code}\label{sec:caption}
+
+The caption positions of figures, tables and code can be set separately. Find \code{caption-position:} under \code{layout:} in \code{config.yml} and set the item you want to \code{"top"} or \code{"bottom"}, meaning above or below the content. These are the current defaults:
+
+\begin{lstlisting}[language=yaml]
+layout:
+  caption-position:
+    image: "bottom"    # figure captions below
+    table: "bottom"    # table captions below
+    code: "bottom"     # code captions below
+\end{lstlisting}
+
+For example, to move the captions of all tables above them, just change \code{table} to \code{"top"}; figures and code do not follow. The figure setting also applies to the overall caption of side-by-side and grid figures. After the change, recompile and check where the captions sit; there is no need to edit the figures and tables chapter by chapter.
+
+\section{Table of Contents and Page Numbers}
+
+The depth, indentation and page number format of the table of contents sit under \code{outline:}, at the same level as \code{layout:}. The common settings are listed below; on first use keep the defaults and adjust them once the chapters are complete.
+
+\begin{lstlisting}[language=yaml]
+outline:
+  depth: 3            # how many levels the contents list
+  indent: 1           # em, one character per level
+  title-size: 16      # pt, size of the contents, figure and table list titles
+  page-numbering: "i" # front matter: i, ii, iii
+  body-numbering: "1" # body: 1, 2, 3
+  entry-gap: 1        # em, gap between chapters
+  entry-bold: true    # chapter titles in bold in the contents
+\end{lstlisting}
+
+The table of contents is generated from the headings, and the lists of figures and tables collect the figures and tables in the document. To list only chapters and sections, change \code{depth} to \code{2}; the headings in the body keep their levels. After compiling, click an entry in the contents to check that it jumps to the right place.
+
+To change the titles of these three pages, set the text under \code{titles:}. A \code{~} in the string turns into letter spacing, so \code{"目~次"} spreads the two characters apart; to show plain ``目錄'', enter \code{"目錄"}:
+
+\begin{lstlisting}[language=yaml]
+titles:
+  toc: "目~次"   # some schools use 「目錄」
+  lof: "圖~次"
+  lot: "表~次"
+\end{lstlisting}
+
+The position and displayed text of page numbers sit under \code{page-number:}, at the same level as \code{outline:}. These are all defaults and work without changes:
+
+\begin{lstlisting}[language=yaml]
+page-number:
+  position: "bottom" # top: header; bottom: footer
+  align: "center"    # left | center | right
+  format: "{page}"   # {page} is replaced by the page number
+\end{lstlisting}
+
+Each setting can be adjusted as the table below shows. With \code{position} set to \code{"top"} and \code{align} to \code{"right"}, the page number moves to the top right.
+
+\begin{tlt}{Page number settings}{tbl:page-number}{L{0.15\linewidth}L{0.75\linewidth}}
+Parameter & Purpose and example \\
+\midrule
+\code{position} & Position: \code{"top"} header, \code{"bottom"} footer (default). \\
+\code{align} & Alignment: \code{"left"}, \code{"center"} (default), \code{"right"}. \\
+\code{format} & Displayed text: \code{"Page {page}"}; set to \code{""} to hide the page number. \\
+\end{tlt}
+
+The \code{{page}} in \code{format} is replaced by the page number, so \code{"Page {page}"} shows ``Page 1''. Other text is shown as it is; special characters such as \code{%} and \code{&} are handled by the program that generates the settings, so you do not add backslashes.
+
+\code{outline.page-numbering} and \code{outline.body-numbering} control the numbering style of the front matter and the body, lowercase Roman numerals and Arabic numerals by default. \code{page-number.format} only changes the header or footer text; the table of contents keeps the original page number format. The cover and the verification letter show no page number. After adjusting the chapters, check the first page of the body against the page numbers listed in the contents to confirm they match.
+
+\section{Watermark and the Final Version}
+
+If you need a watermark before submitting, first check whether the school settings already name an image. To set one yourself, add the block below to \code{config.yml}, change \code{image} to the image file you want, and then adjust size and lightness.
+
+\begin{lstlisting}[language=yaml]
+watermark:
+  image: "/assets/watermarks/nccu.pdf"
+  width: 100    # %, share of the page width, centred
+  opacity: 100  # %, 100 is the original darkness, 50 washes it out by half
+\end{lstlisting}
+
+After setting the image, run \code{make release} and open the body pages of the PDF to see the watermark. A plain \code{make} does not turn the watermark on, and the cover and front pages never get one. If \code{image} is \code{~}, no image is set and nothing shows even after \code{make release}.
+
+To use your own watermark, first put the image in \code{assets/watermarks/} and then change the path in \code{image}. Use \code{width} to change how much of the page width the image takes, or lower \code{opacity} to make the watermark paler. Whether you need to add a watermark yourself depends on the school's requirements at submission time.
+
+Without \code{make}, you can also run the commands below in the project root; the output file is again \code{main.pdf}:
+
+\begin{lstlisting}[language=bash]
+python3 scripts/gen.py
+latexmk -g -xelatex -usepretex='\def\twwatermark{1}' main.tex
+\end{lstlisting}

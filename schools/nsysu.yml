@@ -1,0 +1,54 @@
+# 國立中山大學 National Sun Yat-sen University
+#
+# Source: docs/國立中山大學-1110315-碩博士論文規範.pdf
+#   https://cse.nsysu.edu.tw/static/file/205/1205/img/3656/Thesisformat.pdf
+# Only what differs from schools/default.yml, which documents every key.
+#
+# Not expressible yet: English text uses double line spacing; page number
+# 1.5cm from the bottom edge; cover top/bottom margins 2.54cm; verification
+# letter lists an advisor line after the committee and no director line.
+
+university: "國立中山大學"
+university-en: "National Sun Yat-sen University"
+
+layout:
+  margin: # cm
+    top: 2.54
+    bottom: 2.54
+    left: 3
+    right: 3
+
+titles:
+  toc: "目~錄"
+
+sections:
+  denotation: "符號說明"
+
+cover:
+  size: # pt
+    org: 18
+    org-en: 16
+    university-en: 16
+    title: 18
+    title-en: 16
+    author: 16
+    advisor: 16
+    date: 16
+
+verification:
+  size: # pt
+    university: 18
+    title: 18
+    thesis-title: 16
+    body: 16
+  degree-line: "{university}"
+  title: "研究生學位論文審定書"
+  statement: "本校{institute}{degree}班研究生{author}（學號：{id}）所提論文，於中華民國{roc}年{month}月{day}日經本委員會審查並舉行口試，符合{degree}學位論文標準。"
+
+strings:
+  committee: "考試委員："
+  committee-advisor: "（召集人）"
+
+watermark: # github.com/hasanabs/nsysu-thesis-latex-template Images/watermark.jpg (250px, low-res)
+  image: "/assets/watermarks/nsysu.jpg"
+  width: 50 # %

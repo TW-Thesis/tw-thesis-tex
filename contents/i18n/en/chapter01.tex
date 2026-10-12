@@ -1,0 +1,264 @@
+\chapter{Getting Started}\label{cha:start}
+
+On first use, keep the sample files as they are and go through the steps in this chapter once: compile, confirm that a PDF is produced, and check that the fonts and pages display correctly. Then fill in your own thesis details and replace the titles and text chapter by chapter. Recompile after every change, so that if an error appears it is easy to tell which edit caused it.
+
+The source files of this tutorial all live in \code{contents/}, and each chapter there corresponds to a chapter in the PDF. When you see a figure, citation or code layout you want, open the matching chapter, copy the example, and swap in your own text and data. Leave syntax you are unsure about as it is, adjust it step by step against the compiled result, and reuse it in other chapters once it works.
+
+\section{Installing and Compiling}
+
+Before compiling and writing, install a \LaTeX{} distribution and the Python 3 that the template uses to convert the config file. The template is compiled with \XeLaTeX{}; pick \href{https://www.tug.org/texlive/}{TeX Live} (MacTeX on macOS, the TeX Live installer on Windows) or the lighter \href{https://yihui.org/tinytex/}{TinyTeX}. The lines below are different ways to install one; run whichever fits your system. \code{brew} and \code{winget} must already be installed.
+
+\begin{lstlisting}[language=bash]
+brew install --cask mactex-no-gui   # macOS
+winget install --id MiKTeX.MiKTeX   # Windows
+sudo apt install texlive-full       # Debian / Ubuntu
+\end{lstlisting}
+
+As for Python 3, macOS and most Linux systems ship with it, and on Windows you can download it from \href{https://www.python.org/downloads/}{python.org}. You also need the \code{PyYAML} package:
+
+\begin{lstlisting}[language=bash]
+python3 -m pip install pyyaml
+\end{lstlisting}
+
+Once installed, switch to the project root in a terminal, which is the folder that contains \code{main.tex}, and run:
+
+\begin{lstlisting}[language=bash]
+python3 scripts/gen.py
+latexmk -xelatex main.tex
+\end{lstlisting}
+
+The first line reads \code{config.yml} and the school settings and writes \code{.tw-thesis-config.tex}. \LaTeX{} cannot read YAML directly, so this has to be repeated after every change to the config file. The second line is the actual compile; when it finishes, \code{main.pdf} appears in the same folder. Open the PDF and check that Chinese displays correctly. The fonts shipped with the project sit in \code{fonts/} and are loaded by file from \code{tw-thesis.cls}, so there is no need to install them on the system.
+
+If \code{make} is installed, the two lines above shrink to the following commands, which run the jobs defined in the project's \code{Makefile}:
+
+\begin{lstlisting}[language=bash]
+make            # write main.pdf (draft, no watermark)
+make watch      # recompile on every save
+make release    # final version, with the school watermark
+make clean      # delete main.pdf and the build leftovers
+\end{lstlisting}
+
+While writing, run \code{make watch} in the project root to start \textbf{watch mode}. The command keeps watching the files; every time you edit and save the thesis text or the settings, \code{latexmk} recompiles and updates the same \code{main.pdf}, so you never have to run the compile command by hand. Keep that terminal open while you work, and press \code{Ctrl+C} to stop watching.
+
+To produce a version with a watermark, stop watch mode first and then run \code{make release}. It adds
+
+\begin{lstlisting}[language=bash]
+-usepretex='\def\twwatermark{1}'
+\end{lstlisting}
+
+and draws the watermark from the image named in the config file. It finishes after compiling and does not keep watching. Note that \code{make watch} and \code{make release} both write \code{main.pdf}; if you start \code{make watch} again later, the PDF is overwritten by the draft without the watermark.
+
+\section{Project Structure}
+
+After downloading or cloning the project, take a moment to learn what each folder is for, so you always know where to look when you want to change something. \tblref{tbl:layout} lists every file and directory in the project:
+
+\begin{tlt}[notes={To change format rules edit \texttt{schools/}; to change text edit \texttt{contents/}.}]{Directories and files}{tbl:layout}{L{0.24\linewidth}L{0.66\linewidth}}
+Path & Purpose \\
+\midrule
+\code{config.yml} & Your thesis details: title, author, department, date, keywords \\
+\code{main.tex} & Binding order: front matter, chapters, references, appendices \\
+\code{contents/} & The thesis text. \code{front/} holds the abstract and acknowledgements, \code{back/} the appendices and the \code{.bib} file \\
+\code{schools/} & Format settings per school. \code{default.yml} is the only source of defaults \\
+\code{scripts/} & The Python program that turns \code{config.yml} into \LaTeX{} macros \\
+\code{tw-thesis.cls}, \code{tw-thesis.sty} & The template itself: the document class plus tools for figures, three-line tables and code style; independent of any one thesis and normally left alone \\
+\code{figures/} & Thesis figures and sample figures \\
+\code{assets/} & Template material such as school watermarks \\
+\code{fonts/} & Fonts shipped with the template \\
+\code{docs/} & The original PDFs of each school's thesis regulations \\
+\end{tlt}
+
+You will mostly edit \code{config.yml}, \code{main.tex} and \code{contents/}. Put thesis figures in \code{figures/}; look at \code{tw-thesis.sty} only when you need to adjust the shared style of figures, tables or code. The \code{\documentclass{tw-thesis}} line at the top of \code{main.tex} loads these tools as well; the content files themselves need no loading commands and can use \code{\fig}, \code{tlt} and the rest directly.
+
+\section{Editing the Config File}
+
+Once compiling works, open \code{config.yml} in the project root and replace the title, name, department and date with your own. The commonly used fields are listed below; fill in the English fields of the original file too, or one of the two languages will be missing:
+
+\begin{lstlisting}[language=yaml]
+title: "分散式系統的一致性研究"
+title-en: "A Study on Consistency in Distributed Systems"
+
+author: "王小明"
+author-en: "Wang, Xiao-Ming"
+id: "111753001"
+
+advisor: "陳大文"
+advisor-en: "Chen, Da-Wen"
+
+college: "資訊學院"
+institute: "資訊科學系"
+
+degree: "碩士"
+type: "論文"
+
+date: "2027-01-15"       # date on the cover
+oral-date: "2026-12-20"  # defense date printed on the verification letter
+
+keywords: ["分散式系統", "一致性"]
+keywords-en: ["Distributed Systems", "Consistency"]
+\end{lstlisting}
+
+Dates use \code{YYYY-MM-DD}. The cover converts them to the ROC year and an English month automatically, and the verification letter picks up the defense date as well.
+
+\code{degree} (Master/Doctor) and \code{type} (thesis/technical report) are used on the cover and the verification letter. When you change them, check the matching \code{degree-en} and \code{type-en} too. After saving, run \code{python3 scripts/gen.py} and compile again, look at the cover to see that the Chinese and English details agree, then check the date on the verification letter.
+
+\section{Applying a School's Format}
+
+Add \code{school:} to \code{config.yml}, or remove the leading \code{#} from the line already there, and fill in the school code. For example, to use National Chengchi University's settings:
+
+\begin{lstlisting}[language=yaml]
+school: nccu   # refers to schools/nccu.yml
+\end{lstlisting}
+
+The school codes provided by the project are listed in \tblref{tbl:schools}. A code must match the file name in \code{schools/}, without \code{.yml}. When no school is given, the template uses the default format and leaves the school name as placeholder text.
+
+\begin{tlt}[notes={The original regulation PDFs are kept in \texttt{docs/}; file names carry the version date.}]{Built-in school codes}{tbl:schools}{L{0.1\linewidth}L{0.3\linewidth}L{0.1\linewidth}L{0.3\linewidth}}
+Code & School & Code & School \\
+\midrule
+\code{ntu} & National Taiwan University & \code{ncu} & National Central University \\
+\code{nthu} & National Tsing Hua University & \code{nsysu} & National Sun Yat-sen University \\
+\code{nycu} & National Yang Ming Chiao Tung University & \code{nchu} & National Chung Hsing University \\
+\code{ncku} & National Cheng Kung University & \code{ccu} & National Chung Cheng University \\
+\code{nccu} & National Chengchi University & \code{ntou} & National Taiwan Ocean University \\
+\code{ntpu} & National Taipei University & \code{nuk} & National University of Kaohsiung \\
+\code{ntnu} & National Taiwan Normal University & \code{ncue} & National Changhua University of Education \\
+\code{nknu} & National Kaohsiung Normal University & & \\
+\end{tlt}
+
+Settings are applied in order, with later ones overriding earlier ones:
+
+\begin{lstlisting}
+schools/default.yml  <-  schools/<school>.yml  <-  config.yml
+\end{lstlisting}
+
+That means you can override any format rule directly in \code{config.yml} without touching the school files. The config has several levels: taking \code{layout} as an example, \code{layout} contains \code{margin}, and \code{margin} contains the four margins. Overriding works item by item: only the items you actually write in \code{config.yml} are replaced, and anything you leave out keeps its default.
+
+For example, the snippet below changes only the top margin and keeps the other three from the school settings:
+
+\begin{lstlisting}[language=yaml]
+layout:
+  margin:
+    top: 3.5
+\end{lstlisting}
+
+If \code{scripts/gen.py} reports \code{unknown key}, check the field named in the message. In the example below \code{fnot-size} is misspelled and should be \code{font-size}:
+
+\begin{lstlisting}
+error: config.yml: unknown key `layout.fnot-size` (see schools/default.yml)
+\end{lstlisting}
+
+Every available key and its default is written in \code{schools/default.yml}, each with a comment giving the unit; that file is the complete list of settings.
+
+\section{The Main File}
+
+A printed thesis has a fixed binding order: cover, verification letter, table of contents, acknowledgements, abstract, chapters, references, appendices. \code{main.tex} is that order. It holds no thesis text; it only says which file goes where and where chapter numbering starts.
+
+In other words, the text is written in the files under \code{contents/} and \code{main.tex} decides their order; to change the binding order or to add or remove a page, edit this file and leave the content alone. The whole file is short, and here it is from start to finish:
+
+\begin{lstlisting}[language=latex]
+\documentclass{tw-thesis}
+
+\begin{document}
+
+\thesisfront
+
+% front matter
+\input{contents/front/acknowledgement}
+\input{contents/front/abstract}
+
+% notation
+\input{contents/front/denotation}
+
+% chapters
+\input{contents/chapter01}
+\input{contents/chapter02}
+
+% references
+\references
+
+% appendices
+\appendix
+\input{contents/back/appendix01}
+
+\end{document}
+\end{lstlisting}
+
+What each line does is summarized in \tblref{tbl:main}.
+
+\begin{tlt}[notes={The cover, verification letter and the three lists are produced by \texttt{\textbackslash thesisfront}.}]{What each line of \texttt{main.tex} does}{tbl:main}{L{0.5\linewidth}L{0.4\linewidth}}
+Content & Effect \\
+\midrule
+\code{\documentclass{tw-thesis}} & Loads the template, reads the settings, and loads the tools: figures, tables, code, filler text \\
+\code{\thesisfront} & Produces the cover, verification letter, table of contents, list of figures and list of tables \\
+\code{\input{contents/front/...}} & The front-matter pages, in the order of this file \\
+\code{\input{contents/chapterNN}} & The chapters; the order of the \code{\input} lines is the chapter number \\
+\code{\references} & The references; the bibliography files are set in the config \\
+\code{\appendix} & Chapters after this line switch to appendix numbering \code{A}, \code{B} \\
+\code{\input{contents/back/...}} & The appendices \\
+\end{tlt}
+
+A few things need special attention:
+
+\begin{enumerate}
+\item Where numbering starts: the acknowledgements, abstract and notation list use unnumbered headings, so they do not become Chapter 1; chapters written with \code{\chapter} after them are numbered.
+\item The chapter number follows the order of the \code{\input} lines, not the file name. For example, moving the \code{chapter03} line above \code{chapter02} makes it the second chapter.
+\item File names do not affect the result, but keeping them in line with the order saves you from losing track of files later.
+\end{enumerate}
+
+\section{Adding and Removing Chapters}
+
+The template splits the content into one file per chapter, all inside \code{contents/}, named by chapter number, for example \code{chapter01.tex} and \code{chapter02.tex}. Editing one chapter does not touch the others, and when compiling fails you can quickly tell which file is at fault.
+
+The \code{\input} lines in \code{main.tex} decide the chapter order, so you maintain those lines yourself when adding or removing chapters.
+
+To add a chapter: create \code{contents/chapter05.tex} (named by chapter number), put a chapter heading and a section heading at the top, then add \code{\input{contents/chapter05}} in \code{main.tex} before \code{\references}.
+
+\begin{lstlisting}[language=latex]
+\chapter{Chapter Title}
+
+\section{Section Title}
+
+Body text.
+\end{lstlisting}
+
+To remove a chapter: delete the file and remove the matching \code{\input} line from \code{main.tex}, otherwise \LaTeX{} cannot find the file and compiling fails. The chapters after it are renumbered automatically, and the \code{\ref} references in the text update too; none of that needs manual edits.
+
+Front matter (\code{contents/front/}) and appendices (\code{contents/back/}) work the same way: create the file and add an \code{\input} line at the right place in \code{main.tex}; when deleting, remove that line as well.
+
+\section{Writing Chapter Content}
+
+Once a chapter file exists, you can start writing. It is a good idea to list the chapter title and a few section headings first and then fill in the text section by section; there is no need to write everything at once.
+
+The most basic chapter looks like this:
+
+\begin{lstlisting}[language=latex]
+\chapter{Introduction}
+
+\section{Background}
+
+The first paragraph.
+
+The second paragraph; leave a blank line between paragraphs.
+
+\subsection{Motivation}
+
+Text under a third-level heading.
+\end{lstlisting}
+
+\code{\chapter}, \code{\section} and \code{\subsection} are chapter, section and subsection in that order; the fourth level uses \code{\subsubsection} and is not numbered. The font size, alignment and numbering words of each level come from the school settings, so when writing you only choose the right level and never adjust the look yourself. A chapter heading also starts a new page automatically, so leave no blank space at the beginning or end of the file.
+
+A blank line starts a new paragraph, and the first-line indent is automatic. Do not break lines by hand at the end of each line: \LaTeX{} wraps according to the page width, and a single line break in the source counts as one space, so forcing breaks only causes odd layouts when you edit the text later.
+
+To make a chapter referable, add a label after its heading, for example \code{\chapter{Method}\label{cha:method}}. Writing \code{\ref{cha:method}} anywhere then shows a clickable ``Chapter 3'', which updates when the chapter number changes. Labels for figures, tables and code work the same way; see Chapter 3.
+
+\section{Filler Text for Trying the Layout}
+
+Once the chapter structure is settled but the text is not written, you can fill it with filler text to lay out the pages, page breaks and figure and table positions. \code{tw-thesis.sty} wraps two commands, five paragraphs each by default:
+
+\begin{lstlisting}[language=latex]
+\zhlorem        % five paragraphs of Chinese
+\enlorem        % five paragraphs of English
+\zhlorem[2]     % two paragraphs
+\enlorem[8]     % eight paragraphs
+\end{lstlisting}
+
+The Chinese filler comes from the \href{https://ctan.org/pkg/zhlipsum}{zhlipsum} package and the English filler from \href{https://ctan.org/pkg/lipsum}{lipsum}; both ship with the \TeX{} distribution. To use different text or change how it is generated, edit those two lines at the end of \code{tw-thesis.sty}.

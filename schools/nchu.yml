@@ -1,0 +1,51 @@
+# 國立中興大學 National Chung Hsing University
+#
+# Source: docs/國立中興大學-1110421-碩博士論文規範.pdf
+#   https://ace.nchu.edu.tw/download/48
+# Only what differs from schools/default.yml, which documents every key.
+#
+# Fonts are left to colleges and departments.
+#
+# Not expressible yet: Chinese single spacing with 32+ lines and 32+ chars per
+# line, English 1.5 spacing with 28+ lines; double spacing below chapter
+# titles; sections centred; a blank dedication page after the cover; one
+# combined 圖表目次 unless there are more than 10 figures/tables; spine.
+
+university: "國立中興大學"
+university-en: "National Chung Hsing University"
+
+layout:
+  margin: # cm
+    top: 3
+    bottom: 3
+    left: 3
+    right: 3
+  heading:
+    align: ["center", "center", "left", "left"]
+
+titles:
+  lof: "圖~表~目~次"
+  lot: "表~目~次"
+
+cover:
+  size: # pt
+    org: 20
+    org-en: 20
+    university-en: 20
+    title: 20
+    title-en: 20
+    author: 20
+    advisor: 20
+    date: 20
+
+verification:
+  degree-line: "{university}{institute}{degree}學位論文"
+  title: "經~口~試~通~過~特~此~證~明"
+  statement: "姓名：{author}　學號：{id}"
+
+strings:
+  committee: "考試委員："
+  committee-advisor: "（指導教授）"
+
+# No watermark file: the thesis system adds it after review -- do not add one
+# yourself (lib.nchu.edu.tw notice, 2024-07-05).

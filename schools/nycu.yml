@@ -1,0 +1,35 @@
+# 國立陽明交通大學 National Yang Ming Chiao Tung University
+#
+# Source: docs/國立陽明交通大學-1150917-碩博士論文規範.pdf
+#   https://aa.nycu.edu.tw/aa/ch/app/data/view?module=nycu0038&id=4103&serno=fb3b6bc8-2784-420c-8472-9ee93fd71c2d
+# Only what differs from schools/default.yml, which documents every key.
+#
+# Not expressible yet: cover margins (top/bottom 3cm); page number 1.5cm from
+# the bottom edge; publication-form and co-author statements; spine.
+
+university: "國立陽明交通大學"
+university-en: "National Yang Ming Chiao Tung University"
+
+layout:
+  margin: # cm
+    top: 2.5
+    bottom: 2.5
+    left: 3
+    right: 2
+
+titles:
+  toc: "目~錄"
+  lof: "圖~目~錄"
+  lot: "表~目~錄"
+
+verification:
+  degree-line: "{university}{degree}學位論文"
+  title: "審~定~同~意~書"
+  statement: "{institute}{author}君所提之論文，經學位考試委員會審查通過，特此證明。"
+
+strings:
+  committee-advisor: "（召集人）"
+
+watermark: # github.com/coldwufish/NYCU-thesis-template covers/logo2.pdf (raster, 1631px)
+  image: "/assets/watermarks/nycu.pdf"
+  width: 60 # %

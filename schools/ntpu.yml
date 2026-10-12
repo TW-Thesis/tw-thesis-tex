@@ -1,0 +1,29 @@
+# 國立臺北大學 National Taipei University
+#
+# Source: docs/國立臺北大學-1110816-碩博士論文規範.pdf
+#   https://cms-carrier.ntpu.edu.tw/uploads/Ch_En_Dissertaion_Abstract_and_Table_of_Contents_Format_Example_aa0cb53785.odt
+# Only what differs from schools/default.yml, which documents every key.
+#
+# The university fixes only the abstract (論文提要) and copyright forms;
+# spacing, fonts and sizes are left to the student and department. Every page
+# must carry the NTPU watermark.
+#
+# Not expressible yet: the fixed-layout 中文論文提要 page (title, pages,
+# field, ID, student, advisor header); English abstract in all-caps header.
+
+university: "國立臺北大學"
+university-en: "National Taipei University"
+
+titles:
+  toc: "目~錄"
+  lof: "圖~目~錄"
+  lot: "表~目~錄"
+
+sections:
+  abstract: "中文論文提要"
+  abstract-en: "ABSTRACT"
+  acknowledgement: "謝辭"
+
+watermark: # github.com/LINLINLIN22/ntpu-thesis-template graph/ntpu.eps (raster, 528px)
+  image: "/assets/watermarks/ntpu.pdf"
+  width: 60 # %

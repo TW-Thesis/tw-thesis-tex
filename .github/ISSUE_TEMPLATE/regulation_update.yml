@@ -1,0 +1,22 @@
+name: 規範更新
+description: 學校修訂了論文格式規範
+labels: [regulation]
+body:
+  - type: input
+    id: school
+    attributes:
+      label: 學校代碼
+    validations: { required: true }
+  - type: input
+    id: url
+    attributes:
+      label: 新版規範網址
+    validations: { required: true }
+  - type: input
+    id: date
+    attributes:
+      label: 新版公布或修訂日期
+  - type: textarea
+    id: changes
+    attributes:
+      label: 你注意到哪些項目改了

@@ -1,0 +1,39 @@
+# 國立高雄大學 National University of Kaohsiung
+#
+# Source: docs/國立高雄大學-1050826-碩博士論文規範.pdf
+#   https://daa.nuk.edu.tw/p/405-1005-4855,c737.php (forms 19-22, 27)
+# Only what differs from schools/default.yml, which documents every key.
+#
+# The university fixes the cover, abstracts, spine and verification letter;
+# body format is left to departments.
+#
+# Not expressible yet: cover and abstract margins 2.54cm; abstract page header
+# with title, advisor, student and institute; spine.
+
+university: "國立高雄大學"
+university-en: "National University of Kaohsiung"
+
+cover:
+  size: # pt
+    org: 20
+    title: 18
+    title-en: 18
+
+verification:
+  size: # pt
+    university: 18
+    title: 18
+    thesis-title: 16
+    body: 16
+  degree-line: "{university}"
+  title: "研究生學位論文審定書"
+  statement: "本校{institute}{degree}班研究生{author}（學號：{id}）所提論文，經本委員會審查並舉行口試，符合{degree}學位論文標準。"
+
+strings:
+  committee: "考試委員："
+  committee-advisor: "（召集人）"
+  director: "系主任／所長："
+
+watermark: # cloud.ncl.edu.tw/nuk/download.php, official (300px, low-res)
+  image: "/assets/watermarks/nuk.jpg"
+  width: 50 # %

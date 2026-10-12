@@ -1,0 +1,29 @@
+% Build: make            (or: latexmk -xelatex main.tex, after python3 scripts/gen.py)
+\documentclass{tw-thesis}
+
+\begin{document}
+
+% cover, verification letter, 目次, 圖次, 表次
+\thesisfront
+
+% front matter
+\input{contents/front/acknowledgement}
+\input{contents/front/abstract}
+
+% notation
+\input{contents/front/denotation}
+
+% chapters
+\input{contents/chapter01}
+\input{contents/chapter02}
+\input{contents/chapter03}
+\input{contents/chapter04}
+
+% references
+\references
+
+% appendices
+\appendix
+\input{contents/back/appendix01}
+
+\end{document}

@@ -1,0 +1,39 @@
+# build output
+main.pdf
+main-en.pdf
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.xdv
+*.ccf
+
+# generated from config.yml
+.tw-thesis-config.tex
+.tw-thesis-bibliography.json
+.tw-thesis-build/
+
+.DS_Store
+!assets/*.pdf
+*.xdv
+.release
+__pycache__/
+
+# commercial system fonts: not redistributable, install them on your own computer
+fonts/english/Times New Roman*.ttf
+
+# local only: never pushed
+scripts/
+tests/
+.vscode/
+docs/superpowers/
+.superpowers/

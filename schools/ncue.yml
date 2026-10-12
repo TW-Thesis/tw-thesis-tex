@@ -1,0 +1,54 @@
+# 國立彰化師範大學 National Changhua University of Education
+#
+# Source: docs/國立彰化師範大學-1101215-碩博士論文規範.pdf (研究生手冊)
+#   https://acadaff.ncue.edu.tw/var/file/2/1002/img/805/775413436.pdf
+# Only what differs from schools/default.yml, which documents every key.
+#
+# Font sizes for the body are left to departments.
+#
+# Not expressible yet: separate Chinese (24pt, single spacing) and English
+# (20pt) covers; English verification letter; abstract/acknowledgement titles
+# 20pt bold with 14pt body; list of tables before list of figures; spine.
+
+university: "國立彰化師範大學"
+university-en: "National Changhua University of Education"
+
+layout:
+  margin: # cm
+    top: 2.54
+    bottom: 2.54
+    left: 2.54 # includes the binding edge
+    right: 2.54
+
+titles:
+  toc: "目~錄"
+  lof: "圖~目~錄"
+  lot: "表~目~錄"
+
+cover:
+  size: # pt, Chinese cover; the English cover uses 20
+    org: 24
+    org-en: 20
+    university-en: 20
+    title: 24
+    title-en: 24
+    author: 24
+    advisor: 24
+    date: 24
+
+verification:
+  size: # pt
+    university: 20
+    title: 20
+    thesis-title: 20
+    body: 16
+  degree-line: "{university}{institute}"
+  title: "論~文~審~定~書"
+  statement: "本論文業經審查及口試合格特此證明"
+
+strings:
+  committee: "召集人："
+  committee-advisor: ""
+  director: "系主任／所長："
+
+# No watermark file: none is published and the upload guides never ask for one.
